@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:timato/models/todo.dart';
 import 'package:timato/screens/todo/todo_checkbox.dart';
 import 'package:timato/screens/todo/todo_item_tile.dart';

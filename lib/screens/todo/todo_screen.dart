@@ -2,17 +2,14 @@
 
 import 'dart:math';
 
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:timato/models/todo.dart';
-import 'package:timato/screens/timer/timer_screen.dart';
-import 'package:timato/screens/todo/todo_edit_screen.dart';
-import 'package:uuid/uuid.dart';
-import 'search_delegate.dart';
+import 'package:timato/widgets/add_fab.dart';
+import 'package:timato/widgets/shaded_background.dart';
+import 'package:timato/widgets/sort_fab.dart';
+import 'package:timato/widgets/timer_fab.dart';
 import 'todo_item_tile.dart';
-
-enum WhyFarther { harder, smarter, selfStarter, tradingCharter }
 
 class TodoListScreen extends StatefulWidget {
   TodoListScreen({
@@ -77,28 +74,9 @@ class _TodoListScreenState extends State<TodoListScreen> {
               backgroundColor: Theme.of(context).backgroundColor,
               expandedHeight: MediaQuery.of(context).size.height * 0.2,
               flexibleSpace: FlexibleSpaceBar(
-                background: ShaderMask(
-                  shaderCallback: (rect) {
-                    return LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.transparent,
-                        Theme.of(context).backgroundColor.withAlpha(120),
-                        Theme.of(context).backgroundColor,
-                        Theme.of(context).backgroundColor,
-                      ],
-                    ).createShader(rect);
-                  },
-                  blendMode: BlendMode.xor,
-                  child: Image.asset(
-                    "assets/images/working_male.png",
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                background: ShadedBackground(),
                 collapseMode: CollapseMode.pin,
-                //centerTitle: true,
+                centerTitle: true,
                 title: Opacity(
                     opacity: _textOpacity,
                     child: Text(
@@ -111,108 +89,10 @@ class _TodoListScreenState extends State<TodoListScreen> {
                     "Timato",
                   )),
               actions: [
-                Padding(
-                  padding: EdgeInsets.all(_fabPadding),
-                  child: OpenContainer(
-                    closedShape: CircleBorder(),
-                    transitionDuration: Duration(
-                      milliseconds: 700,
-                    ),
-                    transitionType: ContainerTransitionType.fadeThrough,
-                    closedColor: Colors.transparent,
-                    openColor: Colors.transparent,
-                    closedElevation: 0,
-                    closedBuilder: (context, open) => FloatingActionButton(
-                      heroTag: "timerFab",
-                      backgroundColor: _fabColor,
-                      elevation: 0,
-                      child: Icon(Icons.timelapse_outlined),
-                      onPressed: open,
-                    ),
-                    openBuilder: (context, close) => TimerScreen(close: close),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(_fabPadding),
-                  child: OpenContainer(
-                    closedShape: CircleBorder(),
-                    transitionDuration: Duration(
-                      milliseconds: 700,
-                    ),
-                    transitionType: ContainerTransitionType.fadeThrough,
-                    closedColor: Colors.transparent,
-                    openColor: Colors.transparent,
-                    closedElevation: 0,
-                    closedBuilder: (context, open) => FloatingActionButton(
-                      heroTag: "addFab",
-                      elevation: 0,
-                      backgroundColor: _fabColor,
-                      child: Icon(
-                        Icons.add,
-                      ),
-                      onPressed: open,
-                    ),
-                    openBuilder: (context, close) => TodoEditScreen(
-                        todo: Todo(
-                          id: Uuid().v4(),
-                          created: DateTime.now(),
-                          due: DateTime.now(),
-                          title: "title",
-                          content: "content",
-                          groupId: Uuid().v4(),
-                          colorCode: 0,
-                          starred: false,
-                          recur: false,
-                          recurUntil: DateTime.now(),
-                          recurCode: 0,
-                          completed: false,
-                        ),
-                        close: close),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(_fabPadding),
-                  child: PopupMenuButton<WhyFarther>(
-                    child: FloatingActionButton(
-                      heroTag: "sortFab",
-                      backgroundColor: _fabColor,
-                      elevation: 0,
-                      onPressed: null,
-                      child: Icon(Icons.sort),
-                    ),
-                    onSelected: (result) {
-                      var selection = result;
-                    },
-                    itemBuilder: (BuildContext context) => <PopupMenuEntry<WhyFarther>>[
-                      const PopupMenuItem<WhyFarther>(
-                        value: WhyFarther.harder,
-                        child: Text('By due date'),
-                      ),
-                      const PopupMenuItem<WhyFarther>(
-                        value: WhyFarther.smarter,
-                        child: Text('By color'),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(_fabPadding),
-                  child: FloatingActionButton(
-                    heroTag: "searchFab",
-                    backgroundColor: _fabColor,
-                    elevation: 0,
-                    child: Icon(
-                      Icons.search,
-                    ),
-                    onPressed: () {
-                      showSearch(
-                        context: context,
-                        delegate: TodoSearchDelegate(),
-                        useRootNavigator: true,
-                      );
-                    },
-                  ),
-                ),
+                TimerFab(fabPadding: _fabPadding, fabColor: _fabColor),
+                AddFab(fabPadding: _fabPadding, fabColor: _fabColor),
+                SortFab(fabPadding: _fabPadding, fabColor: _fabColor),
+                SearchFab(fabPadding: _fabPadding, fabColor: _fabColor),
                 SizedBox(
                   width: 10,
                 ),

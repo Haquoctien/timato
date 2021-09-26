@@ -5,8 +5,6 @@ import 'package:timato/screens/main_app/main_screen.dart';
 import 'package:timato/screens/welcome/welcome.dart';
 import 'package:timato/services/shared_prefs.dart';
 
-import 'enums/shared_pref_keys.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPref().it = await SharedPreferences.getInstance();
