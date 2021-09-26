@@ -2,9 +2,9 @@ import 'package:animations/animations.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
 import 'package:timato/models/todo.dart';
 import 'package:timato/screens/timer/timer_screen.dart';
+import 'package:timato/widgets/todo_details.dart';
 import 'todo_checkbox.dart';
 import 'todo_edit_screen.dart';
 
@@ -68,20 +68,22 @@ class _TodoItemTileState extends State<TodoItemTile> {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      IconButton(
-                        onPressed: open,
-                        icon: Icon(Icons.edit),
+                      EditButton(
+                        open: open,
                       ),
                       Padding(
                         padding: EdgeInsets.only(right: 20),
-                        child: ExpandableButton(child: Icon(Icons.arrow_drop_down)),
+                        child: ExpandableButton(
+                          child: Icon(
+                            Icons.arrow_drop_down,
+                          ),
+                        ),
                       )
                     ],
                   ),
                 ),
               ),
               expanded: Card(
-                borderOnForeground: true,
                 shadowColor: Colors.grey,
                 elevation: 7,
                 child: ListTile(
@@ -94,25 +96,7 @@ class _TodoItemTileState extends State<TodoItemTile> {
                         child: Row(
                           children: [
                             TodoCheckBox(),
-                            OpenContainer(
-                              closedShape: CircleBorder(),
-                              transitionDuration: Duration(
-                                milliseconds: 700,
-                              ),
-                              transitionType: ContainerTransitionType.fadeThrough,
-                              closedColor: Colors.transparent,
-                              openColor: Colors.transparent,
-                              closedElevation: 0,
-                              closedBuilder: (context, open) => IconButton(
-                                iconSize: 40,
-                                icon: Icon(Icons.timelapse_outlined),
-                                onPressed: open,
-                              ),
-                              openBuilder: (context, close) => TimerScreen(
-                                close: close,
-                                todo: widget.todo,
-                              ),
-                            ),
+                            TimerButton(todo: widget.todo),
                           ],
                         ),
                       ),
@@ -122,21 +106,22 @@ class _TodoItemTileState extends State<TodoItemTile> {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      IconButton(
-                        onPressed: open,
-                        icon: Icon(Icons.edit),
+                      EditButton(
+                        open: open,
                       ),
                       Padding(
                         padding: EdgeInsets.only(right: 20),
                         child: ExpandableButton(
-                          child: Icon(Icons.arrow_drop_up),
+                          child: Icon(
+                            Icons.arrow_drop_up,
+                            color: Colors.black,
+                          ),
                         ),
                       )
                     ],
                   ),
                   onTap: () {
                     controller.toggle();
-                    open();
                   },
                 ),
               ),
@@ -152,8 +137,26 @@ class _TodoItemTileState extends State<TodoItemTile> {
   }
 }
 
-class TodoDetails extends StatelessWidget {
-  const TodoDetails({
+class EditButton extends StatelessWidget {
+  final VoidCallback open;
+
+  const EditButton({
+    Key? key,
+    required this.open,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: open,
+      icon: Icon(Icons.edit),
+      color: Colors.black,
+    );
+  }
+}
+
+class TimerButton extends StatelessWidget {
+  const TimerButton({
     Key? key,
     required this.todo,
   }) : super(key: key);
@@ -162,29 +165,23 @@ class TodoDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 30),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            todo.title,
-            style: Theme.of(context).textTheme.headline5,
-          ),
-          Divider(),
-          Text(
-            todo.content,
-            style: Theme.of(context).textTheme.subtitle1,
-          ),
-          Divider(),
-          Text(
-            DateFormat.jm().format(todo.due) + ", " + DateFormat.yMEd().format(todo.due),
-          ),
-          SizedBox(
-            height: 8,
-          ),
-          Divider(),
-        ],
+    return OpenContainer(
+      closedShape: CircleBorder(),
+      transitionDuration: Duration(
+        milliseconds: 700,
+      ),
+      transitionType: ContainerTransitionType.fadeThrough,
+      closedColor: Colors.transparent,
+      openColor: Colors.transparent,
+      closedElevation: 0,
+      closedBuilder: (context, open) => IconButton(
+        iconSize: 40,
+        icon: Icon(Icons.timelapse_outlined),
+        onPressed: open,
+      ),
+      openBuilder: (context, close) => TimerScreen(
+        close: close,
+        todo: todo,
       ),
     );
   }

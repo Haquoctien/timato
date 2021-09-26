@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:timato/models/todo.dart';
 import 'package:timato/screens/todo/todo_checkbox.dart';
-import 'package:timato/screens/todo/todo_item_tile.dart';
+import 'package:timato/widgets/todo_details.dart';
 
 import 'count_down_timer.dart';
 

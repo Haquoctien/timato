@@ -1,7 +1,5 @@
 // ignore_for_file: invalid_use_of_protected_member
-
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:timato/models/todo.dart';
@@ -46,7 +44,6 @@ class _TodoListScreenState extends State<TodoListScreen> {
     scrollController = ScrollController()
       ..addListener(() {
         double t = min(scrollController.offset / 80, 1);
-
         setState(() {
           _fabColor = fabColorTween.transform(t) ?? Theme.of(context).primaryColor.withAlpha(230);
           _fabPadding = fabPaddingTween.transform(t);
