@@ -34,6 +34,7 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.close),
           onPressed: () {
@@ -44,11 +45,15 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
                       actions: [
                         TextButton(
                           onPressed: () => Get.back(result: true),
-                          child: Text("Confirm"),
+                          child: Text(
+                            "Confirm",
+                          ),
                         ),
                         TextButton(
                           onPressed: () => Get.back(result: false),
-                          child: Text("Cancel"),
+                          child: Text(
+                            "Cancel",
+                          ),
                         )
                       ],
                     )).then((value) {
@@ -70,6 +75,9 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
               );
             },
           ),
+          SizedBox(
+            width: 10,
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -79,6 +87,15 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
             children: [
               TextField(
                 controller: titleEditingController,
+                maxLength: 128,
+                buildCounter: (
+                  BuildContext context, {
+                  required int currentLength,
+                  required bool isFocused,
+                  required int? maxLength,
+                }) {
+                  return Text("$currentLength/$maxLength");
+                },
                 decoration: InputDecoration(
                   label: Text(
                     "Title",
@@ -87,6 +104,15 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
               ),
               TextField(
                 controller: descriptionEditingController,
+                maxLength: 512,
+                buildCounter: (
+                  BuildContext context, {
+                  required int currentLength,
+                  required bool isFocused,
+                  required int? maxLength,
+                }) {
+                  return Text("$currentLength/$maxLength");
+                },
                 decoration: InputDecoration(
                   label: Text(
                     "Description",
@@ -96,28 +122,63 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
               SizedBox(
                 height: 20,
               ),
-              Text("Due date:"),
-              TextButton(
-                onPressed: () => showDatePicker(
+              GestureDetector(
+                onTap: () => showDatePicker(
                   context: context,
+                  selectableDayPredicate: (date) =>
+                      date.isAfter(DateTime.now()) ||
+                      date.isAtSameMomentAs(
+                        DateTime(
+                          DateTime.now().year,
+                          DateTime.now().month,
+                          DateTime.now().day,
+                        ),
+                      ),
                   initialDate: DateTime.now(),
                   firstDate: DateTime.fromMillisecondsSinceEpoch(0),
                   lastDate: DateTime.parse(
                     "2100-02-27",
                   ),
                 ),
-                child: Text(
-                  DateFormat.yMMMMEEEEd().format(widget.todo.due),
+                child: Row(
+                  children: [
+                    Text(
+                      "Due date: ",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Text(
+                      DateFormat.yMMMMEEEEd().format(widget.todo.due),
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Text("Due time:"),
-              TextButton(
-                onPressed: () => showTimePicker(
+              SizedBox(
+                height: 20,
+              ),
+              GestureDetector(
+                onTap: () => showTimePicker(
                   context: context,
+                  initialEntryMode: TimePickerEntryMode.input,
                   initialTime: TimeOfDay.now(),
                 ),
-                child: Text(
-                  DateFormat.jm().format(widget.todo.due),
+                child: Row(
+                  children: [
+                    Text(
+                      "Due date: ",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Text(
+                      DateFormat.jm().format(widget.todo.due),
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

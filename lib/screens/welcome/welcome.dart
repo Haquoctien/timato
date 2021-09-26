@@ -19,6 +19,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       bottomNavigationBar: SafePadding(
         padding: EdgeInsets.all(20),
         child: Column(

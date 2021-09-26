@@ -16,28 +16,19 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    bool isFirstTimeUser = SharedPref().it.getBool(SharedPrefKeys.isfirstTimeUser) ?? true;
+    bool isFirstTimeUser = true; //SharedPref().it.getBool(SharedPrefKeys.isfirstTimeUser) ?? true;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData.from(
-        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.lightBlue
-            // primarySwatch: MaterialColor(0xFFF8B195, {
-            //   50: Color(0xfffbd0bf),
-            //   100: Color(0xfff9c1aa),
-            //   200: Color(0xfff9b9a0),
-            //   300: Color(0xFFF8B195),
-            //   400: Color(0xffdf9f86),
-            //   500: Color(0xfff68e77),
-            //   600: Color(0xffae7c68),
-            //   700: Color(0xff956a59),
-            // }),
-            // backgroundColor: Color(0xFF355C7D),
-            // //cardColor: Color(0xff6c5b7b),
-            ),
-      ).copyWith(
-        visualDensity: VisualDensity(horizontal: VisualDensity.maximumDensity, vertical: VisualDensity.maximumDensity),
-      ),
+      // theme: ThemeData.from(
+      //   colorScheme: ColorScheme.fromSwatch(
+      //     primarySwatch: Colors.amber,
+      //     backgroundColor: Colors.white,
+      //     accentColor: Colors.blue,
+      //     cardColor: Colors.amberAccent,
+      //     primaryColorDark: Colors.purple,
+      //   ),
+      // ),
       navigatorKey: Get.key,
       home: isFirstTimeUser ? WelcomeScreen() : MainScreen(),
     );
