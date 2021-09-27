@@ -17,8 +17,9 @@ class TimerFab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Padding(
-      padding: EdgeInsets.all(_fabPadding),
+      padding: EdgeInsets.symmetric(horizontal: _fabPadding),
       child: OpenContainer(
         closedShape: CircleBorder(),
         transitionDuration: Duration(
@@ -29,6 +30,7 @@ class TimerFab extends StatelessWidget {
         openColor: Colors.transparent,
         closedElevation: 0,
         closedBuilder: (context, open) => FloatingActionButton(
+          foregroundColor: scheme.secondary,
           heroTag: "timerFab",
           backgroundColor: _fabColor,
           elevation: 0,

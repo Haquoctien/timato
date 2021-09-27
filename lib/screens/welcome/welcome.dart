@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:flutter/widgets.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:timato/enums/shared_pref_keys.dart';
+import 'package:timato/constants/shared_pref_keys.dart';
 import 'package:timato/screens/main_app/main_screen.dart';
 import 'package:timato/services/shared_prefs.dart';
 import 'package:timato/widgets/safe_padding.dart';
@@ -19,7 +19,8 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      //TODO
+      //backgroundColor: Colors.white,
       bottomNavigationBar: SafePadding(
         padding: EdgeInsets.all(20),
         child: Column(
@@ -29,8 +30,9 @@ class WelcomeScreen extends StatelessWidget {
               controller: _pageController,
               count: 3,
               effect: ExpandingDotsEffect(
-                activeDotColor: Theme.of(context).colorScheme.secondary,
-              ),
+                  // TODO
+                  // activeDotColor: Theme.of(context).colorScheme.secondary,
+                  ),
             ),
             SizedBox(
               height: 20,
@@ -87,6 +89,7 @@ class WelcomeScreen extends StatelessWidget {
               tag: "appname",
               child: Text(
                 "Timato",
+                // TODO
                 style: Theme.of(context).textTheme.headline4?.copyWith(color: Theme.of(context).primaryColor),
               ),
             ),
@@ -106,6 +109,7 @@ class WelcomeScreen extends StatelessWidget {
                         child: Icon(
                           FontAwesomeIcons.hourglass,
                           size: _iconSize,
+                          // TODO
                           color: Theme.of(context).colorScheme.secondary,
                         ),
                       ),
@@ -130,6 +134,7 @@ class WelcomeScreen extends StatelessWidget {
                         child: Icon(
                           FontAwesomeIcons.listAlt,
                           size: _iconSize,
+                          // TODO
                           color: Theme.of(context).colorScheme.secondary,
                         ),
                       ),
@@ -154,6 +159,7 @@ class WelcomeScreen extends StatelessWidget {
                         child: Icon(
                           FontAwesomeIcons.sync,
                           size: _iconSize,
+                          // TODO
                           color: Theme.of(context).colorScheme.secondary,
                         ),
                       ),

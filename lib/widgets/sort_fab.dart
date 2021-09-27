@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:timato/enums/sort_options.dart';
+import 'package:timato/constants/sort_options.dart';
 import 'package:timato/screens/todo/search_delegate.dart';
 
 class SearchFab extends StatelessWidget {
@@ -16,9 +16,11 @@ class SearchFab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Padding(
-      padding: EdgeInsets.all(_fabPadding),
+      padding: EdgeInsets.symmetric(horizontal: _fabPadding),
       child: FloatingActionButton(
+        foregroundColor: scheme.secondary,
         heroTag: "searchFab",
         backgroundColor: _fabColor,
         elevation: 0,
@@ -52,7 +54,7 @@ class SortFab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(_fabPadding),
+      padding: EdgeInsets.symmetric(horizontal: _fabPadding),
       child: PopupMenuButton<SortOption>(
         child: FloatingActionButton(
           heroTag: "sortFab",

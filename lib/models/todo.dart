@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:hive/hive.dart';
+import 'package:uuid/uuid.dart';
 part 'todo.g.dart';
 
 Todo todoFromMap(String str) => Todo.fromMap(json.decode(str));
@@ -47,6 +48,21 @@ class Todo extends HiveObject {
   final int recurCode;
   @HiveField(11)
   final bool completed;
+
+  factory Todo.empty() => Todo(
+        id: Uuid().v4(),
+        created: DateTime.now(),
+        due: DateTime.fromMillisecondsSinceEpoch(0),
+        title: "",
+        content: "",
+        groupId: Uuid().v4(),
+        colorCode: -1,
+        starred: false,
+        recur: false,
+        recurUntil: DateTime.fromMillisecondsSinceEpoch(0),
+        recurCode: 0,
+        completed: false,
+      );
 
   Todo copyWith({
     String? id,

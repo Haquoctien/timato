@@ -10,8 +10,10 @@ class TodoCheckBox extends StatefulWidget {
 
 class _TodoCheckBoxState extends State<TodoCheckBox> {
   bool _checked = false;
+
   @override
   Widget build(BuildContext context) {
+    var scheme = Theme.of(context).colorScheme;
     return IconButton(
         iconSize: 40,
         icon: AnimatedSwitcher(
@@ -20,10 +22,12 @@ class _TodoCheckBoxState extends State<TodoCheckBox> {
               ? Icon(
                   Icons.check_circle_rounded,
                   key: Key("checked"),
+                  color: Colors.green,
                 )
               : Icon(
                   Icons.check_circle_outline,
                   key: Key("unchecked"),
+                  color: scheme.onSurface,
                 ),
         ),
         onPressed: () {

@@ -39,7 +39,6 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
         return true;
       },
       child: Scaffold(
-        backgroundColor: Colors.lightGreen.shade100,
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -99,7 +98,8 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
                         duration: Duration(microseconds: 100),
                         child: _isPaused
                             ? FloatingActionButton(
-                                backgroundColor: Colors.lightGreen,
+                                // TODO
+                                //backgroundColor: Colors.lightGreen,
                                 onPressed: () {
                                   if (isStarted) {
                                     isStarted = true;
@@ -116,7 +116,8 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
                                 ),
                               )
                             : FloatingActionButton(
-                                backgroundColor: Colors.lightGreen,
+                                // TODO
+                                //backgroundColor: Colors.lightGreen,
                                 onPressed: () {
                                   controller.pause();
                                   setState(() {

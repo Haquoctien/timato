@@ -18,8 +18,9 @@ class AddFab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     return Padding(
-      padding: EdgeInsets.all(_fabPadding),
+      padding: EdgeInsets.symmetric(horizontal: _fabPadding),
       child: OpenContainer(
         closedShape: CircleBorder(),
         transitionDuration: Duration(
@@ -30,6 +31,7 @@ class AddFab extends StatelessWidget {
         openColor: Colors.transparent,
         closedElevation: 0,
         closedBuilder: (context, open) => FloatingActionButton(
+          foregroundColor: scheme.secondary,
           heroTag: "addFab",
           elevation: 0,
           backgroundColor: _fabColor,
@@ -38,22 +40,7 @@ class AddFab extends StatelessWidget {
           ),
           onPressed: open,
         ),
-        openBuilder: (context, close) => TodoEditScreen(
-            todo: Todo(
-              id: Uuid().v4(),
-              created: DateTime.now(),
-              due: DateTime.now(),
-              title: "title",
-              content: "content",
-              groupId: Uuid().v4(),
-              colorCode: 0,
-              starred: false,
-              recur: false,
-              recurUntil: DateTime.now(),
-              recurCode: 0,
-              completed: false,
-            ),
-            close: close),
+        openBuilder: (context, close) => TodoEditScreen(close: close),
       ),
     );
   }

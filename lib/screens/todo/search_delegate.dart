@@ -10,7 +10,6 @@ class TodoSearchDelegate extends SearchDelegate {
   List<Widget>? buildActions(BuildContext context) {
     return [
       IconButton(
-        color: Colors.white,
         icon: Icon(Icons.search),
         onPressed: () => this.showResults(context),
       ),
@@ -24,8 +23,8 @@ class TodoSearchDelegate extends SearchDelegate {
   ThemeData appBarTheme(BuildContext context) {
     return super.appBarTheme(context).copyWith(
           appBarTheme: super.appBarTheme(context).appBarTheme.copyWith(
+                toolbarHeight: 75,
                 elevation: 0,
-                backgroundColor: Theme.of(context).backgroundColor,
               ),
         );
   }
@@ -34,7 +33,7 @@ class TodoSearchDelegate extends SearchDelegate {
   Widget? buildLeading(BuildContext context) {
     return IconButton(
       onPressed: () => close(context, query),
-      color: Colors.white,
+      // color: Theme.of(context).colorScheme.secondary,
       icon: Icon(Icons.arrow_back),
     );
   }
@@ -58,25 +57,38 @@ class TodoSearchDelegate extends SearchDelegate {
         completed: false,
       ),
     );
-    return CustomScrollView(
-      primary: true,
-      physics: ClampingScrollPhysics(),
-      slivers: [
-        SliverAnimatedList(
-          initialItemCount: todos.length,
-          itemBuilder: (context, index, animation) {
-            var todo = todos[index];
-            return TodoItemTile(todo: todo);
-          },
+    return Scaffold(
+      body: SafeArea(
+        child: CustomScrollView(
+          primary: true,
+          physics: ClampingScrollPhysics(),
+          slivers: [
+            SliverPadding(
+                padding: EdgeInsets.only(
+              top: 20,
+            )),
+            SliverAnimatedList(
+              initialItemCount: todos.length,
+              itemBuilder: (context, index, animation) {
+                var todo = todos[index];
+                return TodoItemTile(todo: todo);
+              },
+            ),
+            SliverPadding(
+                padding: EdgeInsets.only(
+              top: 50,
+            )),
+          ],
         ),
-      ],
+      ),
     );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-    );
+        //TODO
+        // backgroundColor: Theme.of(context).backgroundColor,
+        );
   }
 }
