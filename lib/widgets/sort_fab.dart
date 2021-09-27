@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:timato/constants/sort_options.dart';
-import 'package:timato/screens/todo/search_delegate.dart';
+import 'package:timato/widgets/search_delegate.dart';
 
 class SearchFab extends StatelessWidget {
   const SearchFab({

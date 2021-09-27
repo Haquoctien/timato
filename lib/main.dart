@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timato/screens/main_app/main_screen.dart';
-import 'package:timato/screens/welcome/welcome.dart';
+import 'package:timato/screens/welcome/welcome_screen.dart';
 import 'package:timato/services/shared_prefs.dart';
 import 'constants/shared_pref_keys.dart';
 

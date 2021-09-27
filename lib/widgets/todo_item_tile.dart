@@ -10,7 +10,7 @@ import 'package:timato/screens/timer/timer_screen.dart';
 import 'package:timato/widgets/drawn_triangle.dart';
 import 'package:timato/widgets/todo_details.dart';
 import 'todo_checkbox.dart';
-import 'todo_edit_screen.dart';
+import '../screens/todo/todo_edit_screen.dart';
 
 class TodoItemTile extends StatefulWidget {
   TodoItemTile({

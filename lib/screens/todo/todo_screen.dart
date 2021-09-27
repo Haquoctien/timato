@@ -9,7 +9,7 @@ import 'package:timato/widgets/add_fab.dart';
 import 'package:timato/widgets/shaded_background.dart';
 import 'package:timato/widgets/sort_fab.dart';
 import 'package:timato/widgets/timer_fab.dart';
-import 'todo_item_tile.dart';
+import '../../widgets/todo_item_tile.dart';
 
 class TodoListScreen extends StatefulWidget {
   TodoListScreen({
