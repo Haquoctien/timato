@@ -61,15 +61,13 @@ class CountDownProgressIndicator extends StatefulWidget {
     this.strokeWidth = 10,
     this.text,
     this.autostart = true,
-  })  : assert(duration > 0),
-        assert(initialPosition < duration),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   _CountDownProgressIndicatorState createState() => _CountDownProgressIndicatorState();
 }
 
-class _CountDownProgressIndicatorState extends State<CountDownProgressIndicator> with SingleTickerProviderStateMixin {
+class _CountDownProgressIndicatorState extends State<CountDownProgressIndicator> with TickerProviderStateMixin {
   late Animation<double> _animation;
   late AnimationController _animationController;
 
@@ -107,6 +105,35 @@ class _CountDownProgressIndicatorState extends State<CountDownProgressIndicator>
   }
 
   @override
+  void didUpdateWidget(covariant CountDownProgressIndicator oldWidget) {
+    if (oldWidget.duration != widget.duration) {
+      _animationController.dispose();
+      _animationController = AnimationController(
+        vsync: this,
+        duration: Duration(
+          seconds: widget.duration,
+        ),
+      );
+      _animation = Tween<double>(
+        begin: widget.initialPosition.toDouble(),
+        end: widget.duration.toDouble(),
+      ).animate(_animationController);
+
+      _animationController.addStatusListener((status) {
+        if (status == AnimationStatus.completed) widget.onComplete?.call();
+      });
+
+      _animationController.addListener(() {
+        setState(() {});
+      });
+
+      widget.controller?._state = this;
+    }
+
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   void reassemble() {
     if (widget.autostart) onAnimationStart();
     super.reassemble();
@@ -131,7 +158,7 @@ class _CountDownProgressIndicatorState extends State<CountDownProgressIndicator>
             strokeWidth: widget.strokeWidth,
             backgroundColor: widget.backgroundColor,
             valueColor: AlwaysStoppedAnimation<Color>(widget.valueColor),
-            value: _animation.value / widget.duration,
+            value: widget.duration == 0 ? 0 : (_animation.value / widget.duration),
           ),
         ),
         Container(
@@ -201,5 +228,9 @@ class CountDownController {
     }
 
     _state._animationController.forward(from: initialPosition);
+  }
+
+  void reset() {
+    _state._animationController.reset();
   }
 }

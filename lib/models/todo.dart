@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:equatable/equatable.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 part 'todo.g.dart';
@@ -8,7 +9,7 @@ Todo todoFromMap(String str) => Todo.fromMap(json.decode(str));
 String todoToMap(Todo data) => json.encode(data.toMap());
 
 @HiveType(typeId: 0)
-class Todo extends HiveObject {
+class Todo extends HiveObject with EquatableMixin {
   Todo({
     required this.id,
     required this.created,
@@ -122,4 +123,7 @@ class Todo extends HiveObject {
         "recurCode": recurCode,
         "completed": completed,
       };
+
+  @override
+  List<Object?> get props => [id];
 }

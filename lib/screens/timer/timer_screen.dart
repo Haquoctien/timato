@@ -1,13 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:timato/models/todo.dart';
 import 'package:timato/widgets/todo_checkbox.dart';
 import 'package:timato/widgets/todo_details.dart';
-
 import '../../widgets/count_down_timer.dart';
-
-bool isStarted = false;
+import 'duration_picker.dart';
 
 class TimerScreen extends StatefulWidget {
   final Todo? todo;
@@ -22,9 +21,23 @@ class TimerScreen extends StatefulWidget {
   State<TimerScreen> createState() => _TimerScreenState();
 }
 
-class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClientMixin {
+class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   final controller = CountDownController();
-  bool _isPaused = true;
+  bool _isPaused = false;
+  bool _isStarted = false;
+  bool _isComplete = false;
+  bool get _isReset => !(_isPaused || _isComplete || _isStarted) && _duration > 0;
+  int _duration = 0;
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 200),
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +45,19 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.bottom - MediaQuery.of(context).padding.top;
     var screenWidth = MediaQuery.of(context).size.width;
     var stackHeight = widget.todo == null ? screenHeight : screenHeight * 0.7;
+
+    var timerWidth = 200.0;
+    var buttonsWidth = 50;
+    var buttonsPadding = 20;
+
+    var timerTop = stackHeight * 0.4;
+    var timerLeft = (screenWidth - timerWidth) / 2;
+    var playTop = timerTop + timerWidth + buttonsPadding;
+    var playLeft = (screenWidth - (_isStarted || _isComplete ? (buttonsWidth * 2 + buttonsPadding) : buttonsWidth)) / 2;
+    var resetTop = playTop;
+    var resetLeft = (screenWidth + buttonsPadding) / 2;
+
+    var scheme = Theme.of(context).colorScheme;
     super.build(context);
     return WillPopScope(
       onWillPop: () async {
@@ -69,65 +95,96 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
                       child: IconButton(
                         iconSize: 40,
                         onPressed: Get.back,
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: Colors.lightGreen,
+                        icon: Icon(Icons.arrow_back, color: scheme.primary),
+                      ),
+                    ),
+                    Positioned(
+                      top: timerTop,
+                      left: timerLeft,
+                      child: InkWell(
+                        onTap: () {
+                          if (_isComplete || !_isStarted) setTimer(context);
+                        },
+                        child: CountDownProgressIndicator(
+                          size: timerWidth,
+                          controller: controller,
+                          valueColor: scheme.secondary,
+                          backgroundColor: scheme.primary,
+                          initialPosition: 0,
+                          strokeWidth: 5,
+                          duration: _duration,
+                          timeFormatter: (seconds) => Duration(seconds: seconds).format(),
+                          onComplete: () {
+                            complete();
+                          },
+                          autostart: false,
+                          text: "hh:mm:ss",
+                          timeTextStyle: TextStyle(
+                            color: scheme.secondary,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          labelTextStyle: TextStyle(
+                            color: scheme.secondary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                    AnimatedPositioned(
+                      duration: Duration(milliseconds: 200),
+                      top: playTop,
+                      left: playLeft,
+                      child: FloatingActionButton(
+                        key: Key("AnimatedIcon"),
+                        backgroundColor: scheme.primary,
+                        onPressed: () {
+                          if (_isReset) {
+                            start();
+                            return;
+                          }
+
+                          if (_isComplete || !_isStarted) {
+                            setTimer(context, autoStart: true);
+                            return;
+                          }
+
+                          if (_isStarted) {
+                            if (_isPaused) {
+                              resume();
+                            } else {
+                              pause();
+                            }
+                            return;
+                          }
+
+                          start();
+                        },
+                        child: AnimatedIcon(
+                          progress: _animationController,
+                          icon: AnimatedIcons.play_pause,
+                          color: scheme.secondary,
                         ),
                       ),
                     ),
                     Positioned(
-                      top: stackHeight * 0.4,
-                      left: (screenWidth - 200) / 2,
-                      child: CountDownProgressIndicator(
-                        size: 200,
-                        controller: controller,
-                        valueColor: Colors.blue,
-                        backgroundColor: Colors.lightGreen.shade300,
-                        initialPosition: 0,
-                        duration: 10,
-                        timeFormatter: (seconds) => Duration(seconds: seconds).format(),
-                        onComplete: () => null,
-                        autostart: false,
-                        text: "hh:mm:ss",
-                      ),
-                    ),
-                    Positioned(
-                      top: stackHeight * 0.4 + 250,
-                      left: (MediaQuery.of(context).size.width - 50) / 2,
+                      top: resetTop,
+                      left: resetLeft,
                       child: AnimatedSwitcher(
-                        duration: Duration(microseconds: 100),
-                        child: _isPaused
+                        duration: Duration(milliseconds: 200),
+                        child: _isStarted || _isComplete
                             ? FloatingActionButton(
-                                // TODO
-                                //backgroundColor: Colors.lightGreen,
+                                backgroundColor: scheme.primary,
                                 onPressed: () {
-                                  if (isStarted) {
-                                    isStarted = true;
-                                    controller.start();
-                                  } else {
-                                    controller.resume();
-                                  }
-                                  setState(() {
-                                    _isPaused = false;
-                                  });
+                                  reset();
                                 },
                                 child: Icon(
-                                  Icons.play_arrow,
+                                  Icons.restart_alt_sharp,
+                                  color: scheme.secondary,
                                 ),
                               )
-                            : FloatingActionButton(
-                                // TODO
-                                //backgroundColor: Colors.lightGreen,
-                                onPressed: () {
-                                  controller.pause();
-                                  setState(() {
-                                    _isPaused = true;
-                                  });
-                                },
-                                child: Icon(
-                                  Icons.pause,
-                                ),
-                              ),
+                            : Container(),
                       ),
                     ),
                   ],
@@ -156,6 +213,73 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
         ),
       ),
     );
+  }
+
+  void setTimer(BuildContext context, {autoStart: false}) {
+    showCupertinoDialog<Duration>(
+      context: context,
+      builder: (context) => DurationPicker(),
+    ).then((value) {
+      if (value != null && value.inSeconds > 0) {
+        setState(() {
+          _duration = value.inSeconds;
+        });
+        if (autoStart) {
+          start();
+        }
+      }
+    });
+  }
+
+  void reset() {
+    setState(() {
+      _isComplete = false;
+      _isStarted = false;
+      _isPaused = false;
+    });
+    controller.reset();
+    _animationController.reverse();
+  }
+
+  void start() {
+    setState(() {
+      _isComplete = false;
+      _isStarted = true;
+      _isPaused = false;
+    });
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      controller.start();
+      _animationController.forward();
+    });
+  }
+
+  void resume() {
+    setState(() {
+      _isComplete = false;
+      _isPaused = false;
+      _isStarted = true;
+    });
+    controller.resume();
+    _animationController.forward();
+  }
+
+  void pause() {
+    setState(() {
+      _isComplete = false;
+      _isPaused = true;
+      _isStarted = true;
+    });
+    controller.pause();
+    _animationController.reverse();
+  }
+
+  void complete() {
+    setState(() {
+      _isComplete = true;
+      _isPaused = false;
+      _isStarted = false;
+    });
+    _animationController.reverse();
   }
 
   @override

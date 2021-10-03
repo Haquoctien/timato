@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:timato/constants/todo_color.dart';
 
 class TodoColorPicker extends StatefulWidget {
-  const TodoColorPicker({Key? key}) : super(key: key);
+  final int? pickedColor;
+  const TodoColorPicker({Key? key, this.pickedColor}) : super(key: key);
 
   @override
   State<TodoColorPicker> createState() => _TodoColorPickerState();
@@ -10,6 +11,12 @@ class TodoColorPicker extends StatefulWidget {
 
 class _TodoColorPickerState extends State<TodoColorPicker> {
   int? _colorCode;
+  @override
+  void initState() {
+    _colorCode = widget.pickedColor;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -22,7 +29,7 @@ class _TodoColorPickerState extends State<TodoColorPicker> {
                 splashColor: TodoColor.getColor(code).withAlpha(200),
                 onTap: () => setState(() {
                   if (_colorCode == code) {
-                    _colorCode = null;
+                    _colorCode = -1;
                   } else {
                     _colorCode = code;
                   }

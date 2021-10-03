@@ -14,8 +14,8 @@ class ShadedBackground extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [
             Colors.transparent,
-            Colors.transparent,
             Theme.of(context).backgroundColor.withAlpha(120),
+            Theme.of(context).backgroundColor.withAlpha(200),
             Theme.of(context).backgroundColor,
             Theme.of(context).backgroundColor,
           ],

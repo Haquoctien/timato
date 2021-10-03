@@ -43,25 +43,19 @@ class SortFab extends StatelessWidget {
   const SortFab({
     Key? key,
     required double fabPadding,
-    required Color fabColor,
   })  : _fabPadding = fabPadding,
-        _fabColor = fabColor,
         super(key: key);
 
   final double _fabPadding;
-  final Color _fabColor;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: _fabPadding),
       child: PopupMenuButton<SortOption>(
-        child: FloatingActionButton(
-          heroTag: "sortFab",
-          backgroundColor: _fabColor,
-          elevation: 0,
-          onPressed: null,
-          child: Icon(Icons.sort),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+        child: Icon(
+          Icons.sort,
         ),
         onSelected: (result) {
           // var selection = result;

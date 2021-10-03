@@ -1,10 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:timato/blocs/todo.dart';
 import 'package:timato/constants/todo_color.dart';
+import 'package:timato/extentions/date_time_ex.dart';
 import 'package:timato/models/todo.dart';
 import 'package:timato/widgets/color_picker_dialog.dart';
 import 'package:timato/widgets/safe_padding.dart';
@@ -27,7 +31,6 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
   late final TextEditingController titleEditingController;
   late final TextEditingController descriptionEditingController;
 
-  Color? color;
   @override
   void initState() {
     todo = widget.todo ?? Todo.empty();
@@ -74,13 +77,15 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
         icon: Icon(Icons.close),
         color: scheme.secondary,
         onPressed: () {
-          showDialog(
+          showCupertinoDialog(
               context: context,
               builder: (context) => AlertDialog(
                     title: Text("Discard changes?"),
                     actions: [
                       TextButton(
-                        onPressed: () => Get.back(result: true),
+                        onPressed: () {
+                          Get.back(result: true);
+                        },
                         child: Text(
                           "Confirm",
                         ),
@@ -104,6 +109,7 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
           icon: Icon(Icons.check),
           color: scheme.secondary,
           onPressed: () {
+            BlocProvider.of<TodoBloc>(context).add(TodoAdded(todo: todo));
             widget.close();
             Fluttertoast.showToast(
               msg: "Todo saved!",
@@ -121,6 +127,7 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
 
   TextField buildTitle() {
     return TextField(
+      onChanged: (text) => todo = todo.copyWith(title: text),
       controller: titleEditingController,
       maxLength: 128,
       buildCounter: (
@@ -141,6 +148,7 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
 
   TextField buildContent() {
     return TextField(
+      onChanged: (text) => todo = todo.copyWith(content: text),
       controller: descriptionEditingController,
       maxLength: 512,
       buildCounter: (
@@ -161,23 +169,36 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
 
   InkWell buildDate(BuildContext context) {
     return InkWell(
-      onTap: () => showDatePicker(
-        context: context,
-        selectableDayPredicate: (date) =>
-            date.isAfter(DateTime.now()) ||
-            date.isAtSameMomentAs(
-              DateTime(
-                DateTime.now().year,
-                DateTime.now().month,
-                DateTime.now().day,
+      onTap: () {
+        showDatePicker(
+          context: context,
+          selectableDayPredicate: (date) =>
+              date.isAfter(DateTime.now()) ||
+              date.isAtSameMomentAs(
+                DateTime(
+                  DateTime.now().year,
+                  DateTime.now().month,
+                  DateTime.now().day,
+                ),
               ),
-            ),
-        initialDate: DateTime.now(),
-        firstDate: DateTime.fromMillisecondsSinceEpoch(0),
-        lastDate: DateTime.parse(
-          "2100-02-27",
-        ),
-      ),
+          initialDate: DateTime.now(),
+          firstDate: DateTime.fromMillisecondsSinceEpoch(0),
+          lastDate: DateTime.parse(
+            "2100-02-27",
+          ),
+        ).then((date) {
+          if (date != null) {
+            setState(() {
+              todo = todo.copyWith(
+                  due: todo.due.copyWith(
+                year: date.year,
+                month: date.month,
+                day: date.day,
+              ));
+            });
+          }
+        });
+      },
       child: Row(
         children: [
           Icon(FontAwesomeIcons.calendarAlt),
@@ -185,7 +206,9 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
             width: 10,
           ),
           Text(
-            DateFormat.yMMMMEEEEd().format(todo.due),
+            todo.due != DateTime.fromMillisecondsSinceEpoch(0)
+                ? DateFormat.yMMMMEEEEd().format(todo.due)
+                : "Pick a due date",
             style: TextStyle(
               fontSize: 16,
             ),
@@ -201,11 +224,21 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
       children: [
         Flexible(
           child: InkWell(
-            onTap: () => showTimePicker(
-              context: context,
-              initialEntryMode: TimePickerEntryMode.input,
-              initialTime: TimeOfDay.now(),
-            ),
+            onTap: () {
+              showTimePicker(
+                context: context,
+                initialEntryMode: TimePickerEntryMode.input,
+                initialTime: TimeOfDay.now(),
+              ).then((time) {
+                if (time != null) {
+                  setState(() {
+                    todo = todo.copyWith(
+                      due: todo.due.copyWith(hour: time.hour, minute: time.minute),
+                    );
+                  });
+                }
+              });
+            },
             child: Row(
               children: [
                 Icon(FontAwesomeIcons.clock),
@@ -234,18 +267,20 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
         Flexible(
           child: InkWell(
             onTap: () {
-              showGeneralDialog(
+              showCupertinoDialog<int>(
                   context: context,
-                  pageBuilder: (context, _, __) {
-                    return TodoColorPicker();
-                  }).then((value) => print(value));
+                  builder: (context) {
+                    return TodoColorPicker(pickedColor: todo.colorCode);
+                  }).then((value) => setState(() {
+                    todo = todo.copyWith(colorCode: value);
+                  }));
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Card(
                   elevation: 3,
-                  color: color ?? TodoColor.getColor(-1),
+                  color: TodoColor.getColor(todo.colorCode),
                   shape: CircleBorder(),
                   child: Container(
                     height: 30,

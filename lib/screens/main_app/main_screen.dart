@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:timato/models/todo.dart';
-import 'package:timato/screens/todo/todo_screen.dart';
+import 'package:timato/screens/todo/todo_list_screen.dart';
 import 'package:uuid/uuid.dart';
 
 class MainScreen extends StatelessWidget {
@@ -27,10 +27,8 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: TodoListScreen(
-        todos: todos,
-      ),
+    return TodoListScreen(
+      todos: todos,
     );
   }
 }
