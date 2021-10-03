@@ -47,15 +47,19 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
     var stackHeight = widget.todo == null ? screenHeight : screenHeight * 0.7;
 
     var timerWidth = 200.0;
-    var buttonsWidth = 50;
+    var buttonsWidth = 60;
     var buttonsPadding = 20;
 
     var timerTop = stackHeight * 0.4;
     var timerLeft = (screenWidth - timerWidth) / 2;
     var playTop = timerTop + timerWidth + buttonsPadding;
-    var playLeft = (screenWidth - (_isStarted || _isComplete ? (buttonsWidth * 2 + buttonsPadding) : buttonsWidth)) / 2;
+    var playLeft = (screenWidth - buttonsWidth) / 2;
     var resetTop = playTop;
-    var resetLeft = (screenWidth + buttonsPadding) / 2;
+    var resetLeft = (screenWidth + buttonsWidth + buttonsPadding * 2) / 2;
+
+    var deleteTop = playTop;
+    var deleteLeft =
+        (screenWidth - (_isStarted || _isComplete ? (buttonsWidth * 3 + buttonsPadding * 2) : buttonsWidth)) / 2;
 
     var scheme = Theme.of(context).colorScheme;
     super.build(context);
@@ -169,6 +173,25 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
                       ),
                     ),
                     Positioned(
+                      top: deleteTop,
+                      left: deleteLeft,
+                      child: AnimatedSwitcher(
+                        duration: Duration(milliseconds: 200),
+                        child: _isStarted || _isComplete
+                            ? FloatingActionButton(
+                                backgroundColor: scheme.primary,
+                                onPressed: () {
+                                  delete();
+                                },
+                                child: Icon(
+                                  Icons.close_sharp,
+                                  color: scheme.secondary,
+                                ),
+                              )
+                            : Container(),
+                      ),
+                    ),
+                    Positioned(
                       top: resetTop,
                       left: resetLeft,
                       child: AnimatedSwitcher(
@@ -229,6 +252,17 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
         }
       }
     });
+  }
+
+  void delete() {
+    controller.reset();
+    setState(() {
+      _isComplete = false;
+      _isStarted = false;
+      _isPaused = false;
+      _duration = 0;
+    });
+    _animationController.reverse();
   }
 
   void reset() {
