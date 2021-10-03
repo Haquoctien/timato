@@ -3,8 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:timato/blocs/todo.dart';
-import 'package:timato/constants/sort_options.dart';
+import 'package:timato/blocs/barrel.dart';
 import 'package:timato/models/todo.dart';
 import 'package:timato/widgets/add_fab.dart';
 import 'package:timato/widgets/filter_fab.dart';
@@ -161,18 +160,21 @@ class _TodoListScreenState extends State<TodoListScreen> {
                   ),
                 ],
               ),
-              BlocBuilder<TodoBloc, TodoState>(builder: (context, state) {
-                if (state is TodosLoaded) {
-                  return SliverList(
-                      delegate: SliverChildListDelegate([...state.todos.map((e) => TodoItemTile(todo: e))]));
-                } else {
-                  return SliverPadding(
-                    padding: EdgeInsets.only(
-                      top: 20,
-                    ),
-                  );
-                }
-              }),
+              BlocBuilder<TodoBloc, TodoState>(
+                buildWhen: (_, current) => current is TodosLoaded,
+                builder: (context, state) {
+                  if (state is TodosLoaded) {
+                    return SliverList(
+                        delegate: SliverChildListDelegate([...state.todos.map((e) => TodoItemTile(todo: e))]));
+                  } else {
+                    return SliverPadding(
+                      padding: EdgeInsets.only(
+                        top: 20,
+                      ),
+                    );
+                  }
+                },
+              ),
               SliverPadding(
                   padding: EdgeInsets.only(
                 top: 20,

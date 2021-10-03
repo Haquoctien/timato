@@ -29,13 +29,14 @@ class TodoAdapter extends TypeAdapter<Todo> {
       recurUntil: fields[9] as DateTime,
       recurCode: fields[10] as int,
       completed: fields[11] as bool,
+      timeSpent: fields[12] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, Todo obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -59,7 +60,9 @@ class TodoAdapter extends TypeAdapter<Todo> {
       ..writeByte(10)
       ..write(obj.recurCode)
       ..writeByte(11)
-      ..write(obj.completed);
+      ..write(obj.completed)
+      ..writeByte(12)
+      ..write(obj.timeSpent);
   }
 
   @override

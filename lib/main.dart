@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timato/constants/hive_boxes.dart';
+import 'package:timato/models/todo.dart';
 import 'package:timato/screens/main_app/main_screen.dart';
 import 'package:timato/screens/welcome/welcome_screen.dart';
 import 'package:timato/services/shared_prefs.dart';
@@ -36,10 +39,16 @@ class MyBlocObserver extends BlocObserver {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   SharedPref().it = await SharedPreferences.getInstance();
-  runApp(MyApp());
+
+  await Hive.initFlutter();
+  Hive.registerAdapter<Todo>(TodoAdapter());
+  HiveBox.box = await Hive.openBox<Todo>(HiveBox.Todos);
 
   Bloc.observer = MyBlocObserver();
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

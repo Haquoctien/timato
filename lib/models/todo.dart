@@ -23,6 +23,7 @@ class Todo extends HiveObject with EquatableMixin {
     required this.recurUntil,
     required this.recurCode,
     required this.completed,
+    required this.timeSpent,
   });
 
   @HiveField(0)
@@ -49,6 +50,8 @@ class Todo extends HiveObject with EquatableMixin {
   final int recurCode;
   @HiveField(11)
   final bool completed;
+  @HiveField(12)
+  final int timeSpent;
 
   factory Todo.empty() => Todo(
         id: Uuid().v4(),
@@ -63,6 +66,7 @@ class Todo extends HiveObject with EquatableMixin {
         recurUntil: DateTime.fromMillisecondsSinceEpoch(0),
         recurCode: 0,
         completed: false,
+        timeSpent: 0,
       );
 
   Todo copyWith({
@@ -78,6 +82,7 @@ class Todo extends HiveObject with EquatableMixin {
     DateTime? recurUntil,
     int? recurCode,
     bool? completed,
+    int? timeSpent,
   }) =>
       Todo(
         id: id ?? this.id,
@@ -92,22 +97,23 @@ class Todo extends HiveObject with EquatableMixin {
         recurUntil: recurUntil ?? this.recurUntil,
         recurCode: recurCode ?? this.recurCode,
         completed: completed ?? this.completed,
+        timeSpent: timeSpent ?? this.timeSpent,
       );
 
   factory Todo.fromMap(Map<String, dynamic> json) => Todo(
-        id: json["id"],
-        created: DateTime.parse(json["created"]),
-        due: DateTime.parse(json["due"]),
-        title: json["title"],
-        content: json["content"],
-        groupId: json["groupId"],
-        colorCode: json["colorCode"],
-        starred: json["starred"],
-        recur: json["recur"],
-        recurUntil: DateTime.parse(json["recurUntil"]),
-        recurCode: json["recurCode"],
-        completed: json["completed"],
-      );
+      id: json["id"],
+      created: DateTime.parse(json["created"]),
+      due: DateTime.parse(json["due"]),
+      title: json["title"],
+      content: json["content"],
+      groupId: json["groupId"],
+      colorCode: json["colorCode"],
+      starred: json["starred"],
+      recur: json["recur"],
+      recurUntil: DateTime.parse(json["recurUntil"]),
+      recurCode: json["recurCode"],
+      completed: json["completed"],
+      timeSpent: json["timeSpent"]);
 
   Map<String, dynamic> toMap() => {
         "id": id,
@@ -122,6 +128,7 @@ class Todo extends HiveObject with EquatableMixin {
         "recurUntil": recurUntil.toIso8601String(),
         "recurCode": recurCode,
         "completed": completed,
+        "timeSpent": timeSpent,
       };
 
   @override

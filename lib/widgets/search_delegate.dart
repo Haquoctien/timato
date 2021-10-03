@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:timato/blocs/todo.dart';
+import 'package:timato/blocs/todo_event.dart';
+import 'package:timato/blocs/todo_state.dart';
 import 'package:timato/models/todo.dart';
 import 'package:uuid/uuid.dart';
 
@@ -32,8 +36,9 @@ class TodoSearchDelegate extends SearchDelegate {
   @override
   Widget? buildLeading(BuildContext context) {
     return IconButton(
-      onPressed: () => close(context, query),
-      // color: Theme.of(context).colorScheme.secondary,
+      onPressed: () {
+        close(context, query);
+      },
       icon: Icon(Icons.arrow_back),
     );
   }
@@ -55,6 +60,7 @@ class TodoSearchDelegate extends SearchDelegate {
         recurUntil: DateTime.now(),
         recurCode: 0,
         completed: false,
+        timeSpent: 0,
       ),
     );
     return Scaffold(
@@ -86,9 +92,21 @@ class TodoSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return Scaffold(
-        //TODO
-        // backgroundColor: Theme.of(context).backgroundColor,
-        );
+    BlocProvider.of<TodoBloc>(context).add(TodoSearched(keyword: query));
+    return BlocBuilder<TodoBloc, TodoState>(
+        buildWhen: (_, current) => current is TodosSearchLoaded,
+        builder: (context, state) {
+          if (state is TodosSearchLoaded)
+            return ListView(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              children: [
+                ...state.todos.map(
+                  (e) => TodoItemTile(todo: e),
+                ),
+              ],
+            );
+          else
+            return Container();
+        });
   }
 }

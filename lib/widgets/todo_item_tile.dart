@@ -77,7 +77,13 @@ class _TodoItemTileState extends State<TodoItemTile> {
                       title: Text(
                         widget.todo.title,
                       ),
-                      leading: TodoCheckBox(),
+                      leading: InkWell(
+                        //  onTap: () => BlocProvider.of<TodoBloc>(context).add(TodoCompleted(todo: widget.todo)),
+                        child: TodoCheckBox(
+                          checkedColor: Colors.black,
+                          checked: widget.todo.completed,
+                        ),
+                      ),
                       onTap: controller.toggle,
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
