@@ -23,7 +23,7 @@ class SearchFab extends StatelessWidget {
         heroTag: "searchFab",
         backgroundColor: _fabColor,
         elevation: 0,
-        child: Icon(
+        child:const Icon(
           Icons.search,
         ),
         onPressed: () {

@@ -13,7 +13,7 @@ class TodoDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 30),
+      padding: const EdgeInsets.only(left: 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -30,10 +30,10 @@ class TodoDetails extends StatelessWidget {
           Text(
             DateFormat.jm().format(todo.due) + ", " + DateFormat.yMEd().format(todo.due),
           ),
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
-          Divider(),
+          const Divider(),
         ],
       ),
     );

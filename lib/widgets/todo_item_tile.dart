@@ -90,7 +90,7 @@ class _TodoItemTileState extends State<TodoItemTile> with AutomaticKeepAliveClie
                           EditButton(
                             open: open,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 30,
                           )
                         ],
@@ -105,7 +105,7 @@ class _TodoItemTileState extends State<TodoItemTile> with AutomaticKeepAliveClie
                 ],
               ),
               expanded: Card(
-                shape: RoundedRectangleBorder(
+                shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(10),
@@ -118,7 +118,7 @@ class _TodoItemTileState extends State<TodoItemTile> with AutomaticKeepAliveClie
                     CustomPaint(
                       foregroundPainter: DrawnTriangle(color: TodoColor.getColor(widget.todo.colorCode)),
                       child: ListTile(
-                        contentPadding: EdgeInsets.only(left: 0, bottom: 10, top: 0, right: 8),
+                        contentPadding: const EdgeInsets.only(left: 0, bottom: 10, top: 0, right: 8),
                         title: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -219,11 +219,11 @@ class Star extends StatelessWidget {
     return AnimatedSwitcher(
       duration: Duration(milliseconds: 300),
       child: _starred
-          ? Icon(
+          ? const Icon(
               Icons.star,
               key: Key("starred"),
             )
-          : Icon(
+          : const Icon(
               Icons.star_outline,
               key: Key("unstarred"),
             ),
@@ -243,7 +243,7 @@ class EditButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: open,
-      icon: Icon(Icons.edit),
+      icon: const Icon(Icons.edit),
       color: Colors.black,
     );
   }
@@ -260,8 +260,8 @@ class TimerButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OpenContainer(
-      closedShape: CircleBorder(),
-      transitionDuration: Duration(
+      closedShape: const CircleBorder(),
+      transitionDuration: const Duration(
         milliseconds: 700,
       ),
       transitionType: ContainerTransitionType.fadeThrough,

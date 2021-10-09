@@ -10,7 +10,7 @@ import '../../widgets/count_down_timer.dart';
 class TimerScreen extends StatefulWidget {
   final Todo? todo;
   final VoidCallback close;
-  TimerScreen({
+  const TimerScreen({
     Key? key,
     this.todo,
     required this.close,
@@ -214,7 +214,7 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
               ),
               if (widget.todo != null)
                 ListTile(
-                  contentPadding: EdgeInsets.only(left: 0, bottom: 10, top: 0, right: 8),
+                  contentPadding: const EdgeInsets.only(left: 0, bottom: 10, top: 0, right: 8),
                   title: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

@@ -28,10 +28,10 @@ class FilterFab extends StatelessWidget {
               child: state.filterOption == FilterOption.None
                   ? PopupMenuButton<FilterOption>(
                       initialValue: state.filterOption,
-                      child: Icon(
+                      child:const Icon(
                         Icons.filter_alt_outlined,
                       ),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                      shape:const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                       onSelected: (result) {
                         BlocProvider.of<TodoBloc>(context).add(TodoFiltered(filterOption: result));
                       },

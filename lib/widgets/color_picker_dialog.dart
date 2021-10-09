@@ -21,11 +21,11 @@ class _TodoColorPickerState extends State<TodoColorPicker> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: Colors.white,
-      title: Text("Choose a color: "),
+      title: const Text("Choose a color: "),
       content: Row(
         children: [
           ...[0, 1, 2, 3].map((code) => InkWell(
-                customBorder: CircleBorder(),
+                customBorder: const CircleBorder(),
                 radius: 60,
                 splashColor: TodoColor.getColor(code).withAlpha(200),
                 onTap: () => setState(() {
@@ -38,11 +38,11 @@ class _TodoColorPickerState extends State<TodoColorPicker> {
                 child: Card(
                   elevation: 3,
                   color: TodoColor.getColor(code),
-                  shape: CircleBorder(),
+                  shape: const CircleBorder(),
                   child: AnimatedSwitcher(
                       duration: Duration(milliseconds: 200),
                       child: _colorCode == code
-                          ? Icon(
+                          ? const Icon(
                               Icons.check,
                               size: 50,
                             )
@@ -57,11 +57,11 @@ class _TodoColorPickerState extends State<TodoColorPicker> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context, _colorCode),
-          child: Text("Confirm"),
+          child: const Text("Confirm"),
         ),
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text("Cancel"),
+          child: const Text("Cancel"),
         ),
       ],
     );

@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:timato/blocs/barrel.dart';
+import 'package:timato/constants/sort_options.dart';
 import 'package:timato/models/todo.dart';
 import 'package:timato/widgets/shaded_background.dart';
 import 'package:timato/widgets/todo_item_tile.dart';
@@ -66,7 +67,6 @@ class _TodoListScreenState extends State<TodoListScreen> {
   @override
   Widget build(BuildContext context) {
     var maxPadding = (MediaQuery.of(context).size.width - 60 * 3) / 6;
-    var scheme = Theme.of(context).colorScheme;
     return Scaffold(
       body: NotificationListener<SizeChangedLayoutNotification>(
         onNotification: (noti) {
@@ -84,8 +84,8 @@ class _TodoListScreenState extends State<TodoListScreen> {
         child: Scrollbar(
           controller: scrollController,
           child: CustomScrollView(
-            controller: scrollController,
             physics: ClampingScrollPhysics(),
+            controller: scrollController,
             slivers: [
               FlexibleAppBar(
                   appbarColor: _appbarColor,
@@ -121,6 +121,12 @@ class _TodoListScreenState extends State<TodoListScreen> {
   }
 }
 
+extension on DateTime {
+  bool isSameDayAs(DateTime other) {
+    return this.day == other.day && this.month == other.month && this.year == other.year;
+  }
+}
+
 class ToDoList extends StatelessWidget {
   const ToDoList({
     Key? key,
@@ -132,6 +138,38 @@ class ToDoList extends StatelessWidget {
       buildWhen: (_, current) => current is TodosLoaded,
       builder: (context, state) {
         if (state is TodosLoaded) {
+          if (state.sortOption == SortOption.ByDate) {
+            var todayTodos = state.todos.where((todo) => todo.due.isSameDayAs(DateTime.now()));
+            var otherTodos = state.todos.where((todo) => !todo.due.isSameDayAs(DateTime.now()));
+            return SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  if (todayTodos.isNotEmpty)
+                    const Chip(
+                      backgroundColor: Colors.white70,
+                      label: Text(
+                        "Today",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                  if (todayTodos.isNotEmpty) ...todayTodos.map((e) => DismissibleTodoItemTile(todo: e)),
+                  if (todayTodos.isNotEmpty)
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  const Chip(
+                    backgroundColor: Colors.white70,
+                    label: Text(
+                      "Later",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
+                  ...otherTodos.map((e) => DismissibleTodoItemTile(todo: e)),
+                ],
+              ),
+            );
+          }
+
           return SliverList(
             delegate: SliverChildListDelegate(
               [
@@ -142,7 +180,7 @@ class ToDoList extends StatelessWidget {
             ),
           );
         } else {
-          return SliverPadding(
+          return const SliverPadding(
             padding: EdgeInsets.only(
               top: 20,
             ),
@@ -170,7 +208,7 @@ class DismissibleTodoItemTile extends StatelessWidget {
         if (direction == DismissDirection.endToStart) {
           return showDialog<bool>(
             context: context,
-            builder: (context) => ConfirmDeleteDialog(),
+            builder: (context) => const ConfirmDeleteDialog(),
           );
         } else {
           return Future.value(false);
@@ -219,7 +257,7 @@ class FlexibleAppBar extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
+                const Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
                     "Hi there!",
@@ -244,10 +282,10 @@ class FlexibleAppBar extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 34,
                     ),
-                    Spacer(),
+                    const Spacer(),
                     SortFab(fabPadding: 10),
                     FilterFab(fabPadding: 10)
                   ],
@@ -257,14 +295,14 @@ class FlexibleAppBar extends StatelessWidget {
       ),
       title: Opacity(
           opacity: 1 - _textOpacity,
-          child: Text(
+          child: const Text(
             "Timato",
           )),
       actions: [
         TimerFab(fabPadding: _fabPadding ?? maxPadding, fabColor: _fabColor),
         AddFab(fabPadding: _fabPadding ?? maxPadding, fabColor: _fabColor),
         SearchFab(fabPadding: _fabPadding ?? maxPadding, fabColor: _fabColor),
-        SizedBox(
+        const SizedBox(
           width: 10,
         ),
       ],
@@ -282,7 +320,7 @@ class ConfirmDeleteDialog extends StatelessWidget {
     var scheme = Theme.of(context).colorScheme;
     return AlertDialog(
       backgroundColor: scheme.surface,
-      title: Text(
+      title: const Text(
         "Delete this todo?",
       ),
       actions: [
@@ -290,13 +328,13 @@ class ConfirmDeleteDialog extends StatelessWidget {
           onPressed: () {
             Get.back(result: true);
           },
-          child: Text(
+          child: const Text(
             "Confirm",
           ),
         ),
         TextButton(
           onPressed: () => Get.back(result: false),
-          child: Text(
+          child: const Text(
             "Cancel",
           ),
         )

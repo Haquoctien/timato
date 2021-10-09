@@ -57,16 +57,16 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
               children: [
                 buildTitle(),
                 buildContent(),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 buildDate(context),
-                Divider(),
-                SizedBox(
+                const Divider(),
+                const SizedBox(
                   height: 20,
                 ),
                 buildTimeAndColor(context, scheme),
-                Divider(),
+                const Divider(),
               ],
             ),
           ),
@@ -92,13 +92,13 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
                         onPressed: () {
                           Get.back(result: true);
                         },
-                        child: Text(
+                        child: const Text(
                           "Confirm",
                         ),
                       ),
                       TextButton(
                         onPressed: () => Get.back(result: false),
-                        child: Text(
+                        child: const Text(
                           "Cancel",
                         ),
                       )
@@ -124,7 +124,7 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
             }
           },
         ),
-        SizedBox(
+        const SizedBox(
           width: 10,
         ),
       ],
@@ -149,7 +149,7 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
         }) {
           return Text("$currentLength/$maxLength");
         },
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           label: Text(
             "Title",
           ),
@@ -169,7 +169,7 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
       }) {
         return Text("$currentLength/$maxLength");
       },
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         label: Text(
           "Description",
         ),
@@ -211,19 +211,19 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
       },
       child: Row(
         children: [
-          Icon(FontAwesomeIcons.calendarAlt),
-          SizedBox(
+          const Icon(FontAwesomeIcons.calendarAlt),
+          const SizedBox(
             width: 10,
           ),
           Text(
             todo.due != DateTime.fromMillisecondsSinceEpoch(0)
                 ? DateFormat.yMMMMEEEEd().format(todo.due)
                 : "Pick a due date",
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
             ),
           ),
-          Spacer(),
+          const Spacer(),
         ],
       ),
     );
@@ -251,8 +251,8 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
             },
             child: Row(
               children: [
-                Icon(FontAwesomeIcons.clock),
-                SizedBox(
+                const Icon(FontAwesomeIcons.clock),
+                const SizedBox(
                   width: 10,
                 ),
                 Text(
@@ -261,12 +261,12 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
                     fontSize: 16,
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
               ],
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 20,
         ),
         Container(
@@ -291,16 +291,16 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
                 Card(
                   elevation: 3,
                   color: TodoColor.getColor(todo.colorCode),
-                  shape: CircleBorder(),
+                  shape: const CircleBorder(),
                   child: Container(
                     height: 30,
                     width: 30,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
-                Icon(FontAwesomeIcons.palette),
+                const Icon(FontAwesomeIcons.palette),
               ],
             ),
           ),

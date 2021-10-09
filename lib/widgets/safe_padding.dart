@@ -10,7 +10,7 @@ class SafePadding extends StatelessWidget {
     return SafeArea(
       child: Padding(
         padding: padding ??
-            EdgeInsets.symmetric(
+            const EdgeInsets.symmetric(
               horizontal: 20,
             ),
         child: child,

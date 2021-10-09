@@ -33,7 +33,7 @@ class AddFab extends StatelessWidget {
           heroTag: "addFab",
           elevation: 0,
           backgroundColor: _fabColor,
-          child: Icon(
+          child: const Icon(
             Icons.add,
           ),
           onPressed: open,

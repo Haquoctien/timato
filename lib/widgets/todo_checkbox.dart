@@ -7,7 +7,7 @@ import 'package:timato/models/todo.dart';
 class TodoCheckBox extends StatelessWidget {
   final Color checkedColor;
   final Todo todo;
-  TodoCheckBox({Key? key, this.checkedColor = Colors.green, required this.todo}) : super(key: key);
+  const TodoCheckBox({Key? key, this.checkedColor = Colors.green, required this.todo}) : super(key: key);
 
   Widget build(BuildContext context) {
     var scheme = Theme.of(context).colorScheme;
@@ -22,7 +22,7 @@ class TodoCheckBox extends StatelessWidget {
         );
       },
       icon: AnimatedSwitcher(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         child: todo.completed
             ? Icon(
                 Icons.check_circle_rounded,

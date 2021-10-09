@@ -18,7 +18,7 @@ class SortFab extends StatelessWidget {
       buildWhen: (_, current) => current is TodosLoaded,
       builder: (context, state) {
         if (state is TodosLoading) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         } else {
@@ -26,8 +26,8 @@ class SortFab extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: _fabPadding),
             child: PopupMenuButton<SortOption>(
               initialValue: (state as TodosLoaded).sortOption,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-              child: Icon(
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: const Icon(
                 Icons.sort,
               ),
               onSelected: (result) {
