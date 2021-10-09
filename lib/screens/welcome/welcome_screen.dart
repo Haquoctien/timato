@@ -30,9 +30,8 @@ class WelcomeScreen extends StatelessWidget {
               controller: _pageController,
               count: 3,
               effect: ExpandingDotsEffect(
-                  // TODO
-                  // activeDotColor: Theme.of(context).colorScheme.secondary,
-                  ),
+                activeDotColor: Theme.of(context).colorScheme.primary,
+              ),
             ),
             SizedBox(
               height: 20,
@@ -63,7 +62,10 @@ class WelcomeScreen extends StatelessWidget {
                     onPressed: () {
                       if (_pageController.page == 2) {
                         SharedPref().it.setBool(SharedPrefKeys.isfirstTimeUser, false);
-                        Get.off(() => MainScreen(), routeName: "main");
+                        Get.off(
+                          () => MainScreen(),
+                          routeName: "main",
+                        );
                       }
                       _pageController.nextPage(
                         duration: Duration(

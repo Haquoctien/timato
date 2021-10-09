@@ -20,6 +20,7 @@ class _TodoColorPickerState extends State<TodoColorPicker> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Colors.white,
       title: Text("Choose a color: "),
       content: Row(
         children: [

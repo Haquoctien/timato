@@ -5,11 +5,12 @@ import 'package:timato/models/todo.dart';
 abstract class TodoState extends Equatable {}
 
 class TodosLoaded extends TodoState {
-  TodosLoaded({required this.todos, this.sortOption});
+  TodosLoaded({required this.todos, this.sortOption, required this.uncompletedCount});
   final List<Todo> todos;
   final SortOption? sortOption;
+  final int uncompletedCount;
   @override
-  List<Object?> get props => [todos, sortOption];
+  List<Object?> get props => [todos, sortOption, uncompletedCount];
 }
 
 class TodosSearchLoaded extends TodoState {

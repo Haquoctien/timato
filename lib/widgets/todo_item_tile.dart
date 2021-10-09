@@ -2,6 +2,8 @@ import 'package:animations/animations.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:timato/blocs/barrel.dart';
 import 'package:timato/constants/todo_color.dart';
 import 'package:timato/models/todo.dart';
 import 'package:timato/screens/timer/timer_screen.dart';
@@ -22,10 +24,9 @@ class TodoItemTile extends StatefulWidget {
   State<TodoItemTile> createState() => _TodoItemTileState();
 }
 
-class _TodoItemTileState extends State<TodoItemTile> {
+class _TodoItemTileState extends State<TodoItemTile> with AutomaticKeepAliveClientMixin {
   final ExpandableController controller = ExpandableController();
   double _margin = 0;
-  bool _starred = false;
   @override
   void initState() {
     controller.addListener(() {
@@ -42,15 +43,14 @@ class _TodoItemTileState extends State<TodoItemTile> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var scheme = Theme.of(context).colorScheme;
     return OpenContainer(
       transitionDuration: Duration(
         milliseconds: 700,
       ),
       transitionType: ContainerTransitionType.fadeThrough,
-      // TODO
       closedColor: scheme.background,
-      //openColor: Theme.of(context).backgroundColor,
       closedElevation: 0,
       openElevation: 1,
       closedShape: ContinuousRectangleBorder(),
@@ -78,10 +78,9 @@ class _TodoItemTileState extends State<TodoItemTile> {
                         widget.todo.title,
                       ),
                       leading: InkWell(
-                        //  onTap: () => BlocProvider.of<TodoBloc>(context).add(TodoCompleted(todo: widget.todo)),
                         child: TodoCheckBox(
                           checkedColor: Colors.black,
-                          checked: widget.todo.completed,
+                          todo: widget.todo,
                         ),
                       ),
                       onTap: controller.toggle,
@@ -101,13 +100,7 @@ class _TodoItemTileState extends State<TodoItemTile> {
                   Positioned(
                     right: 0,
                     bottom: 15,
-                    child: IconButton(
-                      splashRadius: 1,
-                      onPressed: () => setState(() {
-                        _starred = !_starred;
-                      }),
-                      icon: Star(starred: _starred),
-                    ),
+                    child: StarButton(todo: widget.todo),
                   )
                 ],
               ),
@@ -133,7 +126,7 @@ class _TodoItemTileState extends State<TodoItemTile> {
                               padding: const EdgeInsets.all(8.0),
                               child: Row(
                                 children: [
-                                  TodoCheckBox(),
+                                  TodoCheckBox(todo: widget.todo),
                                   TimerButton(todo: widget.todo),
                                 ],
                               ),
@@ -165,16 +158,11 @@ class _TodoItemTileState extends State<TodoItemTile> {
                       ),
                     ),
                     Positioned(
-                      right: 0,
-                      bottom: 0,
-                      child: IconButton(
-                        splashRadius: 1,
-                        onPressed: () => setState(() {
-                          _starred = !_starred;
-                        }),
-                        icon: Star(starred: _starred),
-                      ),
-                    )
+                        right: 0,
+                        bottom: 0,
+                        child: StarButton(
+                          todo: widget.todo,
+                        ))
                   ],
                 ),
               ),
@@ -186,6 +174,33 @@ class _TodoItemTileState extends State<TodoItemTile> {
         close: close,
         todo: widget.todo,
       ),
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => mounted;
+}
+
+class StarButton extends StatelessWidget {
+  const StarButton({
+    Key? key,
+    required this.todo,
+  }) : super(key: key);
+
+  final Todo todo;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      splashRadius: 1,
+      onPressed: () {
+        BlocProvider.of<TodoBloc>(context).add(
+          TodoAdded(
+            todo: todo.copyWith(starred: !todo.starred),
+          ),
+        );
+      },
+      icon: Star(starred: todo.starred),
     );
   }
 }

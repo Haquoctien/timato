@@ -6,7 +6,6 @@ import 'package:timato/models/todo.dart';
 import 'package:timato/widgets/todo_checkbox.dart';
 import 'package:timato/widgets/todo_details.dart';
 import '../../widgets/count_down_timer.dart';
-import 'duration_picker.dart';
 
 class TimerScreen extends StatefulWidget {
   final Todo? todo;
@@ -223,7 +222,10 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
                           children: [
-                            TodoCheckBox(),
+                            TodoCheckBox(
+                              checkedColor: Colors.black,
+                              todo: widget.todo!,
+                            ),
                           ],
                         ),
                       ),
@@ -239,14 +241,20 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
   }
 
   void setTimer(BuildContext context, {autoStart: false}) {
-    showCupertinoDialog<Duration>(
-      context: context,
-      builder: (context) => DurationPicker(),
-    ).then((value) {
-      if (value != null && value.inSeconds > 0) {
-        setState(() {
-          _duration = value.inSeconds;
-        });
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => Container(
+              height: 200,
+              color: Colors.white,
+              child: CupertinoTimerPicker(
+                backgroundColor: Colors.white,
+                onTimerDurationChanged: (duration) => _duration = duration.inSeconds,
+                mode: CupertinoTimerPickerMode.ms,
+                alignment: Alignment.bottomCenter,
+              ),
+            )).then((value) {
+      if (_duration > 0) {
+        setState(() {});
         if (autoStart) {
           start();
         }

@@ -1,8 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:timato/models/todo.dart';
 import 'package:timato/screens/todo/todo_edit_screen.dart';
-import 'package:uuid/uuid.dart';
 
 class AddFab extends StatelessWidget {
   const AddFab({

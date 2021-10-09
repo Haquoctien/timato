@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -31,6 +30,7 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
   late Todo todo;
   late final TextEditingController titleEditingController;
   late final TextEditingController descriptionEditingController;
+  final GlobalKey<FormState> formKey = GlobalKey();
 
   @override
   void initState() {
@@ -49,22 +49,26 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
       appBar: buildAppBar(scheme, context),
       body: SingleChildScrollView(
         child: SafePadding(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              buildTitle(),
-              buildContent(),
-              SizedBox(
-                height: 20,
-              ),
-              buildDate(context),
-              Divider(),
-              SizedBox(
-                height: 20,
-              ),
-              buildTimeAndColor(context, scheme),
-              Divider(),
-            ],
+          child: Form(
+            key: formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildTitle(),
+                buildContent(),
+                SizedBox(
+                  height: 20,
+                ),
+                buildDate(context),
+                Divider(),
+                SizedBox(
+                  height: 20,
+                ),
+                buildTimeAndColor(context, scheme),
+                Divider(),
+              ],
+            ),
           ),
         ),
       ),
@@ -78,9 +82,10 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
         icon: Icon(Icons.close),
         color: scheme.secondary,
         onPressed: () {
-          showCupertinoDialog(
+          showDialog(
               context: context,
               builder: (context) => AlertDialog(
+                    backgroundColor: scheme.surface,
                     title: Text("Discard changes?"),
                     actions: [
                       TextButton(
@@ -110,13 +115,13 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
           icon: Icon(Icons.check),
           color: scheme.secondary,
           onPressed: () {
-            BlocProvider.of<TodoBloc>(context).add(TodoAdded(todo: todo));
-            widget.close();
-            Fluttertoast.showToast(
-              msg: "Todo saved!",
-              backgroundColor: Theme.of(context).colorScheme.secondary.withOpacity(0.8),
-              gravity: ToastGravity.CENTER,
-            );
+            if (valid) {
+              BlocProvider.of<TodoBloc>(context).add(TodoAdded(todo: todo));
+              widget.close();
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Todo saved")));
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Fill the required fields first")));
+            }
           },
         ),
         SizedBox(
@@ -126,25 +131,29 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
     );
   }
 
-  TextField buildTitle() {
-    return TextField(
-      onChanged: (text) => todo = todo.copyWith(title: text),
-      controller: titleEditingController,
-      maxLength: 128,
-      buildCounter: (
-        BuildContext context, {
-        required int currentLength,
-        required bool isFocused,
-        required int? maxLength,
-      }) {
-        return Text("$currentLength/$maxLength");
-      },
-      decoration: InputDecoration(
-        label: Text(
-          "Title",
-        ),
-      ),
-    );
+  Widget buildTitle() {
+    return TextFormField(
+        onChanged: (text) => todo = todo.copyWith(title: text),
+        controller: titleEditingController,
+        maxLength: 128,
+        validator: (String? value) {
+          if (value?.isEmpty ?? true) {
+            return "cannot be empty";
+          }
+        },
+        buildCounter: (
+          BuildContext context, {
+          required int currentLength,
+          required bool isFocused,
+          required int? maxLength,
+        }) {
+          return Text("$currentLength/$maxLength");
+        },
+        decoration: InputDecoration(
+          label: Text(
+            "Title",
+          ),
+        ));
   }
 
   TextField buildContent() {
@@ -268,7 +277,7 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
         Flexible(
           child: InkWell(
             onTap: () {
-              showCupertinoDialog<int>(
+              showDialog<int>(
                   context: context,
                   builder: (context) {
                     return TodoColorPicker(pickedColor: todo.colorCode);
@@ -299,4 +308,6 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
       ],
     );
   }
+
+  bool get valid => (formKey.currentState?.validate() ?? false) && todo.due != DateTime.fromMillisecondsSinceEpoch(0);
 }

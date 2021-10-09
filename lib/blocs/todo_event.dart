@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:timato/constants/filter_options.dart';
 import 'package:timato/constants/sort_options.dart';
 import 'package:timato/models/todo.dart';
 

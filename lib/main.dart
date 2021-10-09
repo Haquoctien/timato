@@ -45,7 +45,6 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter<Todo>(TodoAdapter());
   HiveBox.box = await Hive.openBox<Todo>(HiveBox.Todos);
-
   Bloc.observer = MyBlocObserver();
 
   runApp(MyApp());
@@ -59,7 +58,7 @@ class MyApp extends StatelessWidget {
       create: (context) => TodoBloc(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'Timato',
         theme: ThemeData.from(
             colorScheme: ColorScheme.light(
           primary: Color(0xFF344955),
@@ -68,7 +67,7 @@ class MyApp extends StatelessWidget {
           secondaryVariant: Colors.orange,
           surface: Colors.white,
           onSurface: Colors.black,
-          background: Color(0xFFAFBAC4),
+          background: Colors.grey,
         )),
         navigatorKey: Get.key,
         home: isFirstTimeUser ? WelcomeScreen() : MainScreen(),

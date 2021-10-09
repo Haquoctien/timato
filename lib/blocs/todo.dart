@@ -8,7 +8,26 @@ import 'package:timato/models/todo.dart';
 
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
   List<Todo> cachedTodos = HiveBox.box.values.toList();
-  TodoBloc() : super(TodosLoaded(todos: HiveBox.box.values.toList())) {
+  SortOption sortOption = SortOption.ByDate;
+  int get uncompletedCount => cachedTodos.where((todo) => !todo.completed).length;
+
+  TodoBloc() : super(TodosLoading()) {
+    on<TodoRemoved>(
+      (event, emit) {
+        emit(TodosLoading());
+
+        cachedTodos.remove(event.todo);
+
+        HiveBox.box.delete(event.todo.id);
+
+        emit(TodosLoaded(
+          todos: cachedTodos,
+          uncompletedCount: uncompletedCount,
+        ));
+      },
+      transformer: sequential(),
+    );
+
     on<TodoAdded>(
       (event, emit) {
         emit(TodosLoading());
@@ -16,9 +35,8 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         cachedTodos.remove(event.todo);
         cachedTodos.add(event.todo);
 
-        HiveBox.box.add(event.todo);
-
-        emit(TodosLoaded(todos: cachedTodos));
+        HiveBox.box.put(event.todo.id, event.todo);
+        add(TodoSorted(sortOption: sortOption));
       },
       transformer: sequential(),
     );
@@ -40,6 +58,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         emit(TodosLoaded(
           todos: sortedTodos,
           sortOption: event.sortOption,
+          uncompletedCount: uncompletedCount,
         ));
       },
       transformer: sequential(),
@@ -63,5 +82,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       },
       transformer: sequential(),
     );
+
+    add(TodoSorted(sortOption: sortOption));
   }
 }
