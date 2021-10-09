@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:timato/constants/filter_options.dart';
 import 'package:timato/constants/sort_options.dart';
 import 'package:timato/models/todo.dart';
 
@@ -18,20 +19,13 @@ class TodoRemoved extends TodoEvent {
   List<Object?> get props => [todo];
 }
 
-// class TodoChecked extends TodoEvent {
-//   TodoChecked({required this.todo});
-//   final Todo todo;
-//   @override
-//   List<Object?> get props => [todo];
-// }
+class TodoFiltered extends TodoEvent {
+  TodoFiltered({required this.filterOption});
+  final FilterOption filterOption;
 
-// class TodosFiltered extends TodoEvent {
-//   TodosFiltered({required this.filterOption});
-//   final FilterOption filterOption;
-
-//   @override
-//   List<Object?> get props => [filterOption];
-// }
+  @override
+  List<Object?> get props => [filterOption];
+}
 
 class TodoSorted extends TodoEvent {
   TodoSorted({required this.sortOption});

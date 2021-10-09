@@ -3,4 +3,5 @@ enum FilterOption {
   Unstarred,
   Done,
   Undone,
+  None,
 }

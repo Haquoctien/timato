@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:timato/blocs/todo.dart';
+import 'package:timato/blocs/todo_bloc.dart';
 import 'package:timato/blocs/todo_event.dart';
 import 'package:timato/blocs/todo_state.dart';
 import 'package:timato/models/todo.dart';

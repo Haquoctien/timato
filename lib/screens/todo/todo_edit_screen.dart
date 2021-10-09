@@ -6,7 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:timato/blocs/barrel.dart';
-import 'package:timato/blocs/todo.dart';
+import 'package:timato/blocs/todo_bloc.dart';
 import 'package:timato/constants/todo_color.dart';
 import 'package:timato/extentions/date_time_ex.dart';
 import 'package:timato/models/todo.dart';

@@ -279,7 +279,9 @@ class ConfirmDeleteDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var scheme = Theme.of(context).colorScheme;
     return AlertDialog(
+      backgroundColor: scheme.surface,
       title: Text(
         "Delete this todo?",
       ),

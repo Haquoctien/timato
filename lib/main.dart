@@ -8,7 +8,7 @@ import 'package:timato/models/todo.dart';
 import 'package:timato/screens/main_app/main_screen.dart';
 import 'package:timato/screens/welcome/welcome_screen.dart';
 import 'package:timato/services/shared_prefs.dart';
-import 'blocs/todo.dart';
+import 'blocs/todo_bloc.dart';
 import 'constants/shared_pref_keys.dart';
 
 class MyBlocObserver extends BlocObserver {
