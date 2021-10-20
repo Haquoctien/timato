@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timato/blocs/barrel.dart';
+import 'package:timato/constants/app_theme.dart';
 import 'package:timato/constants/filter_options.dart';
 
 class FilterFab extends StatelessWidget {
@@ -14,7 +15,6 @@ class FilterFab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var scheme = Theme.of(context).colorScheme;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: _fabPadding),
       child: BlocBuilder<TodoBloc, TodoState>(
@@ -28,10 +28,10 @@ class FilterFab extends StatelessWidget {
               child: state.filterOption == FilterOption.None
                   ? PopupMenuButton<FilterOption>(
                       initialValue: state.filterOption,
-                      child:const Icon(
+                      child: const Icon(
                         Icons.filter_alt_outlined,
                       ),
-                      shape:const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                       onSelected: (result) {
                         BlocProvider.of<TodoBloc>(context).add(TodoFiltered(filterOption: result));
                       },
@@ -55,16 +55,16 @@ class FilterFab extends StatelessWidget {
                       ],
                     )
                   : Chip(
-                      backgroundColor: Colors.white,
+                      side: BorderSide(width: 2),
                       onDeleted: () {
                         BlocProvider.of<TodoBloc>(context).add(TodoFiltered(filterOption: FilterOption.None));
                       },
                       avatar: CircleAvatar(
-                        backgroundColor: scheme.primary,
+                        backgroundColor: AppTheme.fab.bgColor,
                         child: Icon(
                           Icons.filter_alt_outlined,
-                          size: 12,
-                          color: scheme.secondary,
+                          size: 14,
+                          color: AppTheme.fab.fgColor,
                         ),
                       ),
                       label: Row(
@@ -72,7 +72,7 @@ class FilterFab extends StatelessWidget {
                           Text(
                             state.filterOption.toString().split(".").last,
                             style: TextStyle(
-                              fontSize: 10,
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

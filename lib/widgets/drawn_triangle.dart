@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timato/constants/todo_color.dart';
 
 class DrawnTriangle extends CustomPainter {
   late final Paint painter;
@@ -14,6 +15,9 @@ class DrawnTriangle extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (color == TodoColor.getColor(-1)) {
+      return;
+    }
     var path = Path();
 
     path.moveTo(size.width * 0.75, size.height);

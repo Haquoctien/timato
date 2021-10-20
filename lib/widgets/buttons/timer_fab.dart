@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:timato/constants/app_theme.dart';
 import 'package:timato/screens/timer/timer_screen.dart';
 
 class TimerFab extends StatelessWidget {
@@ -17,7 +18,6 @@ class TimerFab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: _fabPadding),
       child: OpenContainer(
@@ -30,7 +30,7 @@ class TimerFab extends StatelessWidget {
         openColor: Colors.transparent,
         closedElevation: 0,
         closedBuilder: (context, open) => FloatingActionButton(
-          foregroundColor: scheme.secondary,
+          foregroundColor: AppTheme.fab.fgColor,
           heroTag: "timerFab",
           backgroundColor: _fabColor,
           elevation: 0,

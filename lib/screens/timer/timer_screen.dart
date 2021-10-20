@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
+
+import 'package:timato/constants/app_theme.dart';
 import 'package:timato/models/todo.dart';
 import 'package:timato/widgets/todo_checkbox.dart';
 import 'package:timato/widgets/todo_details.dart';
@@ -60,7 +61,6 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
     var deleteLeft =
         (screenWidth - (_isStarted || _isComplete ? (buttonsWidth * 3 + buttonsPadding * 2) : buttonsWidth)) / 2;
 
-    var scheme = Theme.of(context).colorScheme;
     super.build(context);
     return WillPopScope(
       onWillPop: () async {
@@ -68,6 +68,7 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
         return true;
       },
       child: Scaffold(
+        //  backgroundColor: Color(0xFFDCDCDC),
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -94,14 +95,6 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
                       ),
                     ),
                     Positioned(
-                      top: MediaQuery.of(context).padding.top,
-                      child: IconButton(
-                        iconSize: 40,
-                        onPressed: Get.back,
-                        icon: Icon(Icons.arrow_back, color: scheme.primary),
-                      ),
-                    ),
-                    Positioned(
                       top: timerTop,
                       left: timerLeft,
                       child: InkWell(
@@ -111,8 +104,8 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
                         child: CountDownProgressIndicator(
                           size: timerWidth,
                           controller: controller,
-                          valueColor: scheme.secondary,
-                          backgroundColor: scheme.primary,
+                          valueColor: AppTheme.countdown.fgColor,
+                          backgroundColor: AppTheme.countdown.bgColor,
                           initialPosition: 0,
                           strokeWidth: 5,
                           duration: _duration,
@@ -123,12 +116,12 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
                           autostart: false,
                           text: "hh:mm:ss",
                           timeTextStyle: TextStyle(
-                            color: scheme.secondary,
+                            color: AppTheme.text.fgColor,
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
                           ),
                           labelTextStyle: TextStyle(
-                            color: scheme.secondary,
+                            color: AppTheme.text.fgColor,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
@@ -141,7 +134,7 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
                       left: playLeft,
                       child: FloatingActionButton(
                         key: Key("AnimatedIcon"),
-                        backgroundColor: scheme.primary,
+                        backgroundColor: AppTheme.fab.bgColor,
                         onPressed: () {
                           if (_isReset) {
                             start();
@@ -167,7 +160,7 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
                         child: AnimatedIcon(
                           progress: _animationController,
                           icon: AnimatedIcons.play_pause,
-                          color: scheme.secondary,
+                          color: AppTheme.fab.fgColor,
                         ),
                       ),
                     ),
@@ -178,13 +171,13 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
                         duration: Duration(milliseconds: 200),
                         child: _isStarted || _isComplete
                             ? FloatingActionButton(
-                                backgroundColor: scheme.primary,
+                                backgroundColor: AppTheme.fab.bgColor,
                                 onPressed: () {
                                   delete();
                                 },
                                 child: Icon(
                                   Icons.close_sharp,
-                                  color: scheme.secondary,
+                                  color: AppTheme.fab.fgColor,
                                 ),
                               )
                             : Container(),
@@ -197,13 +190,13 @@ class _TimerScreenState extends State<TimerScreen> with AutomaticKeepAliveClient
                         duration: Duration(milliseconds: 200),
                         child: _isStarted || _isComplete
                             ? FloatingActionButton(
-                                backgroundColor: scheme.primary,
+                                backgroundColor: AppTheme.fab.bgColor,
                                 onPressed: () {
                                   reset();
                                 },
                                 child: Icon(
                                   Icons.restart_alt_sharp,
-                                  color: scheme.secondary,
+                                  color: AppTheme.fab.fgColor,
                                 ),
                               )
                             : Container(),

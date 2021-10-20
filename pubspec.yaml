@@ -38,10 +38,11 @@ dependencies:
   animations: ^2.0.1
   intl: ^0.17.0
   expandable: ^5.0.1
-  get: ^4.3.8
   flutter_bloc: ^7.3.0
   equatable: ^2.0.3
   bloc_concurrency: ^0.1.0
+  animated_bottom_navigation_bar: ^0.3.2
+  quiver: ^3.0.1+1
   
 
   

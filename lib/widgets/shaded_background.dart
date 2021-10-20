@@ -22,10 +22,10 @@ class ShadedBackground extends StatelessWidget {
         ).createShader(rect);
       },
       blendMode: BlendMode.xor,
-      child: Image.asset(
-        "assets/images/working_male.png",
-        fit: BoxFit.cover,
-      ),
+      // child: Image.asset(
+      //   "assets/images/working_male.png",
+      //   fit: BoxFit.cover,
+      // ),
     );
   }
 }

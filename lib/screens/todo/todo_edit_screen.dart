@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
+
 import 'package:intl/intl.dart';
 import 'package:timato/blocs/barrel.dart';
 import 'package:timato/blocs/todo_bloc.dart';
+import 'package:timato/constants/app_theme.dart';
 import 'package:timato/constants/todo_color.dart';
 import 'package:timato/extentions/date_time_ex.dart';
 import 'package:timato/models/todo.dart';
-import 'package:timato/widgets/color_picker_dialog.dart';
+import 'package:timato/widgets/dialogs.dart';
 import 'package:timato/widgets/safe_padding.dart';
 
 class TodoEditScreen extends StatefulWidget {
@@ -43,10 +44,9 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: scheme.surface,
-      appBar: buildAppBar(scheme, context),
+      backgroundColor: AppTheme.bg,
+      appBar: buildAppBar(context),
       body: SingleChildScrollView(
         child: SafePadding(
           child: Form(
@@ -65,7 +65,7 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                buildTimeAndColor(context, scheme),
+                buildTimeAndColor(context),
                 const Divider(),
               ],
             ),
@@ -75,29 +75,29 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
     );
   }
 
-  AppBar buildAppBar(ColorScheme scheme, BuildContext context) {
+  AppBar buildAppBar(BuildContext context) {
     return AppBar(
       elevation: 0,
       leading: IconButton(
         icon: Icon(Icons.close),
-        color: scheme.secondary,
+        //color: scheme.secondary,
         onPressed: () {
           showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                    backgroundColor: scheme.surface,
+                    //backgroundColor: scheme.surface,
                     title: Text("Discard changes?"),
                     actions: [
                       TextButton(
                         onPressed: () {
-                          Get.back(result: true);
+                          Navigator.pop(context, true);
                         },
                         child: const Text(
                           "Confirm",
                         ),
                       ),
                       TextButton(
-                        onPressed: () => Get.back(result: false),
+                        onPressed: () => Navigator.pop(context, false),
                         child: const Text(
                           "Cancel",
                         ),
@@ -113,14 +113,14 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
       actions: [
         IconButton(
           icon: Icon(Icons.check),
-          color: scheme.secondary,
+          // color: scheme.secondary,
           onPressed: () {
             if (valid) {
               BlocProvider.of<TodoBloc>(context).add(TodoAdded(todo: todo));
               widget.close();
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Todo saved")));
+              //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Todo saved")));
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Fill the required fields first")));
+              //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Fill the required fields first")));
             }
           },
         ),
@@ -229,7 +229,7 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
     );
   }
 
-  Row buildTimeAndColor(BuildContext context, ColorScheme scheme) {
+  Row buildTimeAndColor(BuildContext context) {
     return Row(
       children: [
         Flexible(
@@ -270,7 +270,7 @@ class _TodoEditScreenState extends State<TodoEditScreen> {
           width: 20,
         ),
         Container(
-          color: scheme.primary,
+          // color: scheme.primary,
           width: 1,
           height: 36,
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timato/blocs/barrel.dart';
+import 'package:timato/constants/app_theme.dart';
 import 'package:timato/models/todo.dart';
 
 class TodoCheckBox extends StatelessWidget {
@@ -10,8 +11,8 @@ class TodoCheckBox extends StatelessWidget {
   const TodoCheckBox({Key? key, this.checkedColor = Colors.green, required this.todo}) : super(key: key);
 
   Widget build(BuildContext context) {
-    var scheme = Theme.of(context).colorScheme;
     return IconButton(
+      iconSize: 40,
       onPressed: () {
         BlocProvider.of<TodoBloc>(context).add(
           TodoAdded(
@@ -33,7 +34,7 @@ class TodoCheckBox extends StatelessWidget {
             : Icon(
                 Icons.check_circle_outline,
                 key: Key("unchecked"),
-                color: scheme.onSurface,
+                color: AppTheme.checked,
                 size: 40,
               ),
       ),

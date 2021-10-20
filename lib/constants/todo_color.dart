@@ -17,7 +17,7 @@ class TodoColor {
       case 3:
         return Teal;
       default:
-        return Colors.white;
+        return Colors.blueGrey;
     }
   }
 }

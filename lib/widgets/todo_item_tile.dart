@@ -3,10 +3,11 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:timato/blocs/barrel.dart';
+import 'package:timato/constants/app_theme.dart';
 import 'package:timato/constants/todo_color.dart';
 import 'package:timato/models/todo.dart';
-import 'package:timato/screens/timer/timer_screen.dart';
 import 'package:timato/widgets/drawn_triangle.dart';
 import 'package:timato/widgets/todo_details.dart';
 import 'todo_checkbox.dart';
@@ -44,135 +45,133 @@ class _TodoItemTileState extends State<TodoItemTile> with AutomaticKeepAliveClie
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    var scheme = Theme.of(context).colorScheme;
-    return OpenContainer(
-      transitionDuration: Duration(
-        milliseconds: 700,
-      ),
-      transitionType: ContainerTransitionType.fadeThrough,
-      closedColor: scheme.background,
-      closedElevation: 0,
-      openElevation: 1,
-      closedShape: ContinuousRectangleBorder(),
-      closedBuilder: (context, open) => SizeChangedLayoutNotifier(
-        child: AnimatedPadding(
-          duration: Duration(milliseconds: 300),
-          padding: EdgeInsets.symmetric(vertical: _margin, horizontal: 10),
-          child: ExpandableNotifier(
-            controller: controller,
-            child: Expandable(
-              collapsed: Stack(
-                children: [
-                  Card(
-                    color: TodoColor.getColor(widget.todo.colorCode),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(10),
-                        bottomLeft: Radius.circular(10),
-                      ),
-                    ),
-                    child: ListTile(
-                      contentPadding: EdgeInsets.all(8),
-                      title: Text(
-                        widget.todo.title,
-                      ),
-                      leading: InkWell(
-                        child: TodoCheckBox(
-                          checkedColor: Colors.black,
-                          todo: widget.todo,
-                        ),
-                      ),
-                      onTap: controller.toggle,
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
+
+    return SizeChangedLayoutNotifier(
+      child: AnimatedPadding(
+        duration: Duration(milliseconds: 300),
+        padding: EdgeInsets.symmetric(vertical: _margin),
+        child: ExpandableNotifier(
+          controller: controller,
+          child: Expandable(
+            collapsed: Card(
+              color: AppTheme.card.bgColor,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  width: widget.todo.colorCode != -1 ? 5 : 2,
+                  color: TodoColor.getColor(widget.todo.colorCode),
+                ),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(10),
+                  bottomRight: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
+                child: InkWell(
+                  onTap: controller.toggle,
+                  child: Column(
+                    children: [
+                      Row(
                         children: [
-                          EditButton(
-                            open: open,
+                          TodoCheckBox(
+                            todo: widget.todo,
                           ),
-                          const SizedBox(
-                            width: 30,
-                          )
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.todo.title,
+                                maxLines: 3,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 12,
+                              ),
+                              Text(
+                                DateFormat.jm().format(widget.todo.due) +
+                                    ", " +
+                                    DateFormat.yMEd().format(widget.todo.due),
+                              ),
+                            ],
+                          ),
+                          Spacer(),
+                          StarButton(
+                            todo: widget.todo,
+                          ),
                         ],
                       ),
-                    ),
-                  ),
-                  Positioned(
-                    right: 0,
-                    bottom: 15,
-                    child: StarButton(todo: widget.todo),
-                  )
-                ],
-              ),
-              expanded: Card(
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(10),
-                    bottomLeft: Radius.circular(10),
+                    ],
                   ),
                 ),
-                elevation: 7,
-                child: Stack(
-                  children: [
-                    CustomPaint(
-                      foregroundPainter: DrawnTriangle(color: TodoColor.getColor(widget.todo.colorCode)),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.only(left: 0, bottom: 10, top: 0, right: 8),
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+            ),
+            expanded: Card(
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  width: 3,
+                  color: TodoColor.getColor(widget.todo.colorCode),
+                ),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(10),
+                  bottomLeft: Radius.circular(10),
+                ),
+              ),
+              elevation: 7,
+              child: CustomPaint(
+                foregroundPainter: DrawnTriangle(color: TodoColor.getColor(widget.todo.colorCode)),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
+                  child: GestureDetector(
+                    onTap: () {
+                      controller.toggle();
+                    },
+                    behavior: HitTestBehavior.opaque,
+                    child: Column(
+                      children: [
+                        Row(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  TodoCheckBox(todo: widget.todo),
-                                  TimerButton(todo: widget.todo),
-                                ],
+                            TodoCheckBox(todo: widget.todo),
+                            Spacer(),
+                            TimerButton(todo: widget.todo),
+                            OpenContainer(
+                              transitionDuration: Duration(
+                                milliseconds: 700,
+                              ),
+                              transitionType: ContainerTransitionType.fadeThrough,
+                              closedColor: AppTheme.icon.bgColor,
+                              closedElevation: 0,
+                              openElevation: 0,
+                              closedShape: CircleBorder(),
+                              closedBuilder: (context, open) => EditButton(
+                                open: open,
+                              ),
+                              openBuilder: (context, close) => TodoEditScreen(
+                                close: close,
+                                todo: widget.todo,
                               ),
                             ),
-                            TodoDetails(todo: widget.todo),
+                            StarButton(
+                              todo: widget.todo,
+                            )
                           ],
                         ),
-                        onTap: () {
-                          controller.toggle();
-                        },
-                      ),
-                    ),
-                    Positioned(
-                      top: 16,
-                      right: 38,
-                      child: EditButton(
-                        open: open,
-                      ),
-                    ),
-                    Positioned(
-                      top: 16,
-                      right: 0,
-                      child: IconButton(
-                        onPressed: controller.toggle,
-                        icon: Icon(
-                          Icons.arrow_drop_up,
-                          color: scheme.onSurface,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 14),
+                          child: TodoDetails(todo: widget.todo),
                         ),
-                      ),
+                      ],
                     ),
-                    Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: StarButton(
-                          todo: widget.todo,
-                        ))
-                  ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ),
-      openBuilder: (context, close) => TodoEditScreen(
-        close: close,
-        todo: widget.todo,
       ),
     );
   }
@@ -244,7 +243,7 @@ class EditButton extends StatelessWidget {
     return IconButton(
       onPressed: open,
       icon: const Icon(Icons.edit),
-      color: Colors.black,
+      color: AppTheme.icon.fgColor,
     );
   }
 }
@@ -259,22 +258,12 @@ class TimerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OpenContainer(
-      closedShape: const CircleBorder(),
-      transitionDuration: const Duration(
-        milliseconds: 700,
-      ),
-      transitionType: ContainerTransitionType.fadeThrough,
-      closedElevation: 0,
-      closedBuilder: (context, open) => IconButton(
+    return IconButton(
         iconSize: 40,
-        icon: Icon(Icons.timelapse_outlined),
-        onPressed: open,
-      ),
-      openBuilder: (context, close) => TimerScreen(
-        close: close,
-        todo: todo,
-      ),
-    );
+        icon: Icon(
+          Icons.timelapse_outlined,
+          color: AppTheme.icon.fgColor,
+        ),
+        onPressed: () {});
   }
 }
